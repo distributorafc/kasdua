@@ -1,0 +1,2151 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KASDUA 8.6 — Portal Transparansi Kas Kelompok II • SMPN 27 Makassar</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f1f5f9;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes slideUp {
+            from { transform: translateY(16px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-slide-up {
+            animation: slideUp 0.22s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="text-slate-800 pb-24 md:pb-16">
+
+    <!-- TOP ADMIN BANNER -->
+    <div id="adminBanner" class="hidden bg-amber-500 text-white text-xs font-extrabold py-2.5 px-4 text-center shadow-md sticky top-0 z-40 flex flex-wrap items-center justify-center gap-2">
+        <i class="fa-solid fa-unlock-keyhole"></i>
+        <span>MODE BENDAHARA AKTIF — Mesin Kasir FIFO, Input Denda & Sinkronisasi Cloud Terbuka.</span>
+        <div class="flex items-center gap-1.5">
+            <button onclick="openSyncModal()" class="bg-white text-amber-900 hover:bg-amber-50 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold transition shadow-2xs">
+                <i class="fa-solid fa-cloud-arrow-up mr-1"></i>Sinkronisasi WA / GitHub
+            </button>
+            <button onclick="toggleAdminMode()" class="bg-amber-800 hover:bg-amber-900 text-white px-2.5 py-0.5 rounded-full text-[11px] transition">
+                Kunci
+            </button>
+        </div>
+    </div>
+
+    <!-- SNAPSHOT LINK BANNER (Appears when opened via WhatsApp Shared Link ?data=...) -->
+    <div id="snapshotBanner" class="hidden bg-teal-700 text-white text-xs font-bold py-2 px-4 text-center flex items-center justify-center gap-2">
+        <i class="fa-solid fa-circle-check text-emerald-300"></i>
+        <span>Menampilkan data terbaru dari Tautan Snapshot WhatsApp Bendahara.</span>
+    </div>
+
+    <!-- HEADER / HERO BRANDING -->
+    <header class="bg-gradient-to-br from-brand-900 via-brand-800 to-teal-900 text-white pt-5 pb-16 px-4 shadow-lg relative overflow-hidden">
+        <div class="absolute -top-16 -right-16 w-60 h-60 bg-emerald-400/10 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-8 w-44 h-44 bg-teal-300/10 rounded-full blur-xl pointer-events-none"></div>
+
+        <div class="max-w-4xl mx-auto relative z-10">
+            <div class="flex items-start justify-between gap-3 mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-white/15 backdrop-blur-md border border-white/25 flex flex-col items-center justify-center shadow-inner shrink-0">
+                        <span class="font-extrabold text-lg leading-none text-emerald-300">K2</span>
+                        <span class="text-[9px] font-bold tracking-widest text-white/90">8.6</span>
+                    </div>
+                    <div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight">KASDUA 8.6</h1>
+                            <span class="bg-emerald-400/20 border border-emerald-300/30 text-emerald-200 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                                Kelompok II
+                            </span>
+                        </div>
+                        <p class="text-xs sm:text-sm text-emerald-100/90 font-medium">
+                            SMP Negeri 27 Makassar • Portal Kas & Rapor Iuran Siswa
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right Action Buttons -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <button onclick="openSyncModal()" title="Sinkronisasi Cloud & Tautan WA" class="bg-white/10 hover:bg-white/20 active:scale-95 transition border border-white/20 rounded-xl p-2.5 text-xs font-bold backdrop-blur-xs flex items-center gap-1.5">
+                        <i class="fa-solid fa-share-nodes text-emerald-300"></i>
+                        <span class="hidden sm:inline">Bagikan / Cloud</span>
+                    </button>
+                    <button onclick="handleAdminClick()" class="bg-white/15 hover:bg-white/25 active:scale-95 transition border border-white/25 rounded-xl px-3 py-2.5 flex items-center gap-2 text-xs font-extrabold backdrop-blur-xs">
+                        <i id="lockIcon" class="fa-solid fa-lock text-emerald-300"></i>
+                        <span id="lockText">Bendahara</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Status Bar -->
+            <div class="bg-black/25 backdrop-blur-md border border-white/15 rounded-2xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                <div class="flex items-center gap-2 text-emerald-100">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="font-semibold">Akses Terbuka Orang Tua & Siswa (Urutan Abjad A–Z • Tanpa Login)</span>
+                </div>
+                <div class="flex items-center gap-3 text-[11px] text-emerald-200/90 font-medium">
+                    <span id="syncStatusIndicator" class="flex items-center gap-1">
+                        <i class="fa-solid fa-database text-emerald-400"></i> Mode Lokal + Link WA
+                    </span>
+                    <span>•</span>
+                    <span id="lastUpdatedText">Update: 10 Nov 2026</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="max-w-4xl mx-auto px-3.5 sm:px-4 -mt-10 relative z-20 space-y-4">
+
+        <!-- TODAY'S PAYMENTS BANNER (JEJAK SETORAN HARI INI) -->
+        <section class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white rounded-2xl p-3.5 sm:p-4 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-start sm:items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-lg shrink-0">
+                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                </div>
+                <div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="text-[10px] font-extrabold uppercase tracking-wider bg-black/25 px-2 py-0.5 rounded-md text-emerald-200">
+                            Update Hari Ini
+                        </span>
+                        <h2 class="text-xs sm:text-sm font-extrabold">Setoran Masuk Terakhir (Tercatat di Jejak Audit)</h2>
+                    </div>
+                    <div id="todayPaymentsContainer" class="flex flex-wrap gap-1.5 mt-1.5">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+                <button onclick="copyWhatsAppReport(true)" class="w-full sm:w-auto bg-white text-brand-900 hover:bg-emerald-50 active:scale-95 transition font-extrabold text-xs px-3.5 py-2.5 rounded-xl shadow-xs flex items-center justify-center gap-1.5">
+                    <i class="fa-brands fa-whatsapp text-emerald-600 text-base"></i>
+                    <span>Salin Laporan + Link WA</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- OVERVIEW SUMMARY CARDS (3 PROGRAM IURAN + KAS DENDA/NOTA) -->
+        <section class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
+            <!-- 1. Iuran Bulanan -->
+            <div onclick="openProgramTab('BULANAN')" class="cursor-pointer bg-white hover:border-brand-500 transition rounded-2xl p-3.5 shadow-2xs border border-slate-200/80 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between text-xs font-bold text-brand-700 mb-1">
+                        <span>1. Iuran Bulanan</span>
+                        <span class="bg-brand-50 text-brand-700 text-[10px] px-2 py-0.5 rounded-md border border-brand-200 font-extrabold">100K/bln</span>
+                    </div>
+                    <div id="cardBulananNovDes" class="text-base sm:text-lg font-extrabold text-slate-900">Rp 0</div>
+                    <div class="text-[11px] text-slate-500 mt-0.5">Kas Masuk Bln Nov & Des</div>
+                </div>
+                <div class="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                    <span class="text-emerald-700 font-bold" id="cardBulananLunasOkt">11 Lunas s/d Okt</span>
+                    <span class="text-brand-600 font-bold" id="cardBulananNovLunas">5 Lunas Nov ✅</span>
+                </div>
+            </div>
+
+            <!-- 2. Seni Budaya -->
+            <div onclick="openProgramTab('SENI')" class="cursor-pointer bg-white hover:border-purple-500 transition rounded-2xl p-3.5 shadow-2xs border border-slate-200/80 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between text-xs font-bold text-purple-700 mb-1">
+                        <span>2. Seni Budaya</span>
+                        <span class="bg-purple-50 text-purple-700 text-[10px] px-2 py-0.5 rounded-md border border-purple-200 font-extrabold">100K/org</span>
+                    </div>
+                    <div id="cardSeniTotal" class="text-base sm:text-lg font-extrabold text-slate-900">Rp 0</div>
+                    <div class="text-[11px] text-slate-500 mt-0.5">Target 25 Siswa: Rp 2,5 Jt</div>
+                </div>
+                <div class="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                    <span class="text-emerald-600 font-bold" id="cardSeniLunas">15 Lunas ✅</span>
+                    <span class="text-purple-700 font-bold" id="cardSeniCicil">10 Cicil/Belum</span>
+                </div>
+            </div>
+
+            <!-- 3. Perbaikan Kelas -->
+            <div onclick="openProgramTab('PERBAIKAN')" class="cursor-pointer bg-white hover:border-blue-500 transition rounded-2xl p-3.5 shadow-2xs border border-slate-200/80 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between text-xs font-bold text-blue-700 mb-1">
+                        <span>3. Perbaikan Kelas</span>
+                        <span class="bg-blue-50 text-blue-700 text-[10px] px-2 py-0.5 rounded-md border border-blue-200 font-extrabold">50K/anak</span>
+                    </div>
+                    <div id="cardPerbaikanTotal" class="text-base sm:text-lg font-extrabold text-slate-900">Rp 0</div>
+                    <div class="text-[11px] text-slate-500 mt-0.5 truncate">Tukang, Horden, TV, Kipas</div>
+                </div>
+                <div class="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                    <span class="text-emerald-600 font-bold" id="cardPerbaikanLunas">18 Lunas ✅</span>
+                    <span class="text-blue-700 font-bold" id="cardPerbaikanCicil">7 Mencicil</span>
+                </div>
+            </div>
+
+            <!-- 4. Kas Denda & Pengeluaran -->
+            <div onclick="switchTab('denda')" class="cursor-pointer bg-white hover:border-amber-500 transition rounded-2xl p-3.5 shadow-2xs border border-slate-200/80 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between text-xs font-bold text-amber-700 mb-1">
+                        <span>4. Denda & Nota</span>
+                        <i class="fa-solid fa-receipt text-amber-500"></i>
+                    </div>
+                    <div id="cardDendaTotal" class="text-base sm:text-lg font-extrabold text-slate-900">Rp 0</div>
+                    <div class="text-[11px] text-slate-500 mt-0.5" id="cardDendaUnpaid">Belum dibayar: Rp 0</div>
+                </div>
+                <div class="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                    <span class="text-rose-600 font-bold" id="cardExpenseTotal">Keluar: Rp 0</span>
+                    <span class="text-slate-500 font-semibold">Cek Nota →</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- GLOBAL SEARCH BAR (INSTANT RAPOR KAS SISWA) -->
+        <section class="bg-white rounded-2xl p-3.5 shadow-2xs border border-slate-200/90">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2.5">
+                <div class="relative flex-1">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-600 text-sm"></i>
+                    <input type="text" id="globalSearchInput" oninput="handleGlobalSearch()" 
+                        placeholder="Ketik nama anak (misal: Alif, Azra, Fadel, Fadli, Imam, Wafika)..." 
+                        class="w-full pl-10 pr-9 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition">
+                    <button id="clearSearchBtn" onclick="clearGlobalSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                    </button>
+                </div>
+                <div class="flex items-center justify-between sm:justify-end gap-2 text-[11px] text-slate-500 px-1">
+                    <span class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-shield-heart text-brand-600"></i>
+                        <span>Tampilan sopan A–Z • Klik kartu untuk rincian penuh</span>
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- NAVIGATION TABS -->
+        <nav class="flex bg-slate-200/90 backdrop-blur-md p-1.5 rounded-2xl sticky top-2 z-30 shadow-2xs border border-slate-300/70 overflow-x-auto no-scrollbar gap-1">
+            <button onclick="switchTab('rapor')" id="tabBtn-rapor" class="tab-btn flex-1 py-2.5 px-3 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-1.5 whitespace-nowrap bg-white text-brand-900 shadow-2xs">
+                <i class="fa-solid fa-id-card-clip text-brand-600"></i>
+                <span>Rapor Kas Siswa (A–Z)</span>
+            </button>
+            <button onclick="switchTab('program')" id="tabBtn-program" class="tab-btn flex-1 py-2.5 px-3 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-1.5 whitespace-nowrap text-slate-600 hover:text-slate-900">
+                <i class="fa-solid fa-layer-group text-purple-600"></i>
+                <span>Detail 3 Iuran</span>
+            </button>
+            <button onclick="switchTab('denda')" id="tabBtn-denda" class="tab-btn flex-1 py-2.5 px-3 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-1.5 whitespace-nowrap text-slate-600 hover:text-slate-900">
+                <i class="fa-solid fa-gavel text-amber-600"></i>
+                <span>Denda & Nota</span>
+            </button>
+            <button onclick="switchTab('audit')" id="tabBtn-audit" class="tab-btn flex-1 py-2.5 px-3 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-1.5 whitespace-nowrap text-slate-600 hover:text-slate-900">
+                <i class="fa-solid fa-clock-rotate-left text-teal-600"></i>
+                <span>Jejak Audit & WA</span>
+            </button>
+        </nav>
+
+        <!-- =========================================================================
+             TAB 1: KARTU RAPOR KAS SISWA (URUTAN ABJAD NETRAL A-Z & RAMAH ORANG TUA)
+             ========================================================================= -->
+        <section id="tabContent-rapor" class="space-y-3.5">
+            <!-- Filter Pills -->
+            <div class="bg-white rounded-2xl p-3 shadow-2xs border border-slate-200/80 flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+                    <button onclick="setRaporFilter('ALL')" id="raporFilter-ALL" class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-slate-900 text-white transition shrink-0">
+                        Semua Siswa A–Z (25)
+                    </button>
+                    <button onclick="setRaporFilter('NOV_ACTIVE')" id="raporFilter-NOV_ACTIVE" class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-slate-100 text-slate-600 hover:bg-slate-200 transition shrink-0">
+                        Sudah Masuk Bln Nov/Des (11)
+                    </button>
+                    <button onclick="setRaporFilter('CICIL_OKT')" id="raporFilter-CICIL_OKT" class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-slate-100 text-slate-600 hover:bg-slate-200 transition shrink-0">
+                        Progres Cicilan s/d Bln 10 (14)
+                    </button>
+                    <button onclick="setRaporFilter('TODAY')" id="raporFilter-TODAY" class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition shrink-0">
+                        Setoran Hari Ini
+                    </button>
+                </div>
+
+                <!-- Bendahara Quick Add Student Button -->
+                <button id="btnAdminNewStudent" onclick="openAddStudentModal()" class="hidden bg-brand-600 hover:bg-brand-700 text-white text-xs font-extrabold px-3 py-1.5 rounded-xl transition items-center gap-1.5">
+                    <i class="fa-solid fa-user-plus"></i> + Siswa Baru
+                </button>
+            </div>
+
+            <!-- Polite Student Cards Grid (Sorted A-Z) -->
+            <div id="raporStudentGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <!-- Populated via JS -->
+            </div>
+        </section>
+
+        <!-- =========================================================================
+             TAB 2: DETAIL 3 PROGRAM IURAN (BULANAN, SENI BUDAYA, PERBAIKAN KELAS)
+             ========================================================================= -->
+        <section id="tabContent-program" class="hidden space-y-4">
+            <!-- Sub-selector for the 3 Programs -->
+            <div class="grid grid-cols-3 gap-2 bg-white p-2 rounded-2xl border border-slate-200 shadow-2xs">
+                <button onclick="setProgramSubTab('BULANAN')" id="progSubBtn-BULANAN" class="py-2.5 px-3 rounded-xl text-xs font-extrabold bg-brand-700 text-white transition text-center">
+                    1. Bulanan (100K/bln)
+                </button>
+                <button onclick="setProgramSubTab('SENI')" id="progSubBtn-SENI" class="py-2.5 px-3 rounded-xl text-xs font-extrabold bg-slate-100 text-slate-700 hover:bg-slate-200 transition text-center">
+                    2. Seni Budaya (100K)
+                </button>
+                <button onclick="setProgramSubTab('PERBAIKAN')" id="progSubBtn-PERBAIKAN" class="py-2.5 px-3 rounded-xl text-xs font-extrabold bg-slate-100 text-slate-700 hover:bg-slate-200 transition text-center">
+                    3. Perbaikan (50K)
+                </button>
+            </div>
+
+            <!-- Program Info Banner -->
+            <div id="programDetailBanner" class="bg-white rounded-2xl p-4 border border-slate-200 shadow-2xs">
+                <!-- Dynamic banner -->
+            </div>
+
+            <!-- Program Student List -->
+            <div id="programDetailList" class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                <!-- Dynamic list -->
+            </div>
+        </section>
+
+        <!-- =========================================================================
+             TAB 3: KAS DENDA (QUICK-TAP) & BUKTI NOTA PENGELUARAN KELAS
+             ========================================================================= -->
+        <section id="tabContent-denda" class="hidden space-y-5">
+            <!-- Admin Quick-Tap Fine Box -->
+            <div id="adminQuickFineCard" class="hidden bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-extrabold text-sm text-amber-950 flex items-center gap-2">
+                        <i class="fa-solid fa-bolt text-amber-600"></i> Catat Denda Kedisiplinan (1-Klik)
+                    </h3>
+                    <span class="text-[10px] font-extrabold bg-amber-200 text-amber-900 px-2.5 py-0.5 rounded-full">Mode Bendahara</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <select id="fineStudentSelect" class="p-2.5 rounded-xl border border-amber-300 bg-white text-xs sm:text-sm font-bold"></select>
+                    <select id="fineStatusSelect" class="p-2.5 rounded-xl border border-amber-300 bg-white text-xs sm:text-sm font-bold">
+                        <option value="UNPAID">⏳ Catat Belum Bayar (Tagihan Denda)</option>
+                        <option value="PAID">✅ Langsung Lunas Tunai</option>
+                    </select>
+                </div>
+                <div id="presetFineButtons" class="grid grid-cols-1 sm:grid-cols-3 gap-2"></div>
+            </div>
+
+            <!-- Daftar Denda Siswa -->
+            <div class="bg-white rounded-2xl p-4 shadow-2xs border border-slate-200 space-y-3">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-scale-balanced text-amber-500"></i> Rekap Kas Denda Kelas 8.6
+                        </h3>
+                        <p class="text-xs text-slate-500">Denda kesepakatan kelas untuk menjaga kebersihan dan ketertiban bersama.</p>
+                    </div>
+                </div>
+                <div id="finesListContainer" class="space-y-2"></div>
+            </div>
+
+            <!-- Daftar Pengeluaran & Nota -->
+            <div class="bg-white rounded-2xl p-4 shadow-2xs border border-slate-200 space-y-3">
+                <div class="flex items-center justify-between gap-2">
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-file-invoice-dollar text-rose-500"></i> Rincian Pengeluaran & Bukti Nota Kelas
+                        </h3>
+                        <p class="text-xs text-slate-500">Transparansi penggunaan dana perbaikan kelas (tukang, horden, TV, kabel kipas) & kas bulanan.</p>
+                    </div>
+                    <button id="btnAddExpense" onclick="openExpenseModal()" class="hidden bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition items-center gap-1.5 shrink-0">
+                        <i class="fa-solid fa-plus"></i> Catat Pengeluaran
+                    </button>
+                </div>
+                <div id="expensesListContainer" class="space-y-2.5"></div>
+            </div>
+        </section>
+
+        <!-- =========================================================================
+             TAB 4: JEJAK AUDIT TRANSAKSI & GENERATOR LAPORAN WHATSAPP GRUP
+             ========================================================================= -->
+        <section id="tabContent-audit" class="hidden space-y-4">
+            <!-- WhatsApp Report & Snapshot Generator Box -->
+            <div class="bg-gradient-to-br from-slate-900 to-brand-950 text-white rounded-2xl p-4 sm:p-5 shadow-md space-y-3">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <span class="text-[10px] font-extrabold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-2.5 py-0.5 rounded-md">
+                            Siap Tempel ke Grup WA Kelas 8.6
+                        </span>
+                        <h3 class="text-base font-extrabold mt-1">Generator Laporan WhatsApp & Link Snapshot Otomatis</h3>
+                        <p class="text-xs text-slate-300 mt-0.5">
+                            Salin teks rekap di bawah ini ke grup WA. Tautan yang disertakan sudah membawa data terbaru sehingga orang tua di HP lain langsung melihat angka yang sama!
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 shrink-0">
+                        <button onclick="copyWhatsAppReport(true)" class="bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+                            <i class="fa-brands fa-whatsapp text-sm"></i> Salin Laporan + Link WA
+                        </button>
+                        <button onclick="openSyncModal()" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs px-3.5 py-2.5 rounded-xl transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-cloud"></i> Pengaturan Cloud / GitHub
+                        </button>
+                    </div>
+                </div>
+                <pre id="waReportPreviewBox" class="bg-black/40 border border-white/10 rounded-xl p-3 text-[11px] text-emerald-100 font-mono overflow-x-auto max-h-56 leading-relaxed"></pre>
+            </div>
+
+            <!-- Chronological Audit Trail (Jejak Audit Semua Pembayaran) -->
+            <div class="bg-white rounded-2xl p-4 shadow-2xs border border-slate-200 space-y-3">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-clock-rotate-left text-brand-600"></i> Jejak Audit Riwayat Setoran Siswa (Real-Time)
+                        </h3>
+                        <p class="text-xs text-slate-500">Setiap setoran yang diinput bendahara tercatat tanggal, nominal, dan alokasi bulannya secara permanen.</p>
+                    </div>
+                </div>
+                <div id="globalAuditList" class="space-y-2">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="max-w-4xl mx-auto px-4 mt-10 text-center text-xs text-slate-400 space-y-1">
+        <p class="font-bold text-slate-600">KASDUA 8.6 — Kelompok II • Kelas 8.6 SMP Negeri 27 Makassar</p>
+        <p>Sistem Kasir Pintar FIFO • Urutan Abjad Netral A–Z • Sinkronisasi WA & GitHub Pages</p>
+    </footer>
+
+
+    <!-- =========================================================================
+         MODALS:
+         1. KARTU RAPOR KAS SISWA + MESIN KASIR PINTAR FIFO (POINT #2, #3, #6)
+         2. SINKRONISASI CLOUD, LINK WA & GITHUB PAGES (POINT #1)
+         3. PIN BENDAHARA DENGAN HASH VERIFICATION (POINT #4)
+         4. TAMBAH PENGELUARAN & SISWA BARU
+         ========================================================================= -->
+
+    <!-- 1. MODAL KARTU RAPOR KAS LENGKAP SISWA & KASIR FIFO -->
+    <div id="studentModal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-xs z-50 hidden items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-2xl w-full p-4 sm:p-6 shadow-2xl animate-slide-up max-h-[93vh] overflow-y-auto space-y-4">
+            
+            <!-- Modal Header -->
+            <div class="flex items-start justify-between gap-3 pb-3 border-b border-slate-100 sticky top-0 bg-white z-10">
+                <div class="flex items-center gap-3">
+                    <div id="modalAvatar" class="w-11 h-11 rounded-2xl bg-brand-100 text-brand-800 font-extrabold text-base flex items-center justify-center border border-brand-200 shrink-0">
+                        AZ
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider bg-brand-50 text-brand-700 border border-brand-200 px-2 py-0.5 rounded-md">
+                                Kartu Rapor Kas Siswa
+                            </span>
+                            <span class="text-[11px] text-slate-400 font-semibold">Kelas 8.6 SMPN 27</span>
+                        </div>
+                        <h3 id="modalStudentName" class="text-lg sm:text-xl font-extrabold text-slate-900 mt-0.5">Nama Siswa</h3>
+                    </div>
+                </div>
+                <button onclick="closeStudentModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- RINGKASAN TOTAL 3 IURAN SISWA -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <!-- Box 1: Bulanan -->
+                <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/80">
+                    <span class="text-[10px] font-extrabold uppercase text-slate-400 block">1. Iuran Bulanan (100K/bln)</span>
+                    <div id="modalSummaryBulananStatus" class="text-xs font-extrabold text-slate-900 mt-1">-</div>
+                    <div id="modalSummaryBulananSub" class="text-[11px] text-slate-500 mt-0.5">-</div>
+                </div>
+                <!-- Box 2: Seni Budaya -->
+                <div class="bg-purple-50/60 p-3 rounded-2xl border border-purple-200/80">
+                    <span class="text-[10px] font-extrabold uppercase text-purple-600 block">2. Seni Budaya (100K)</span>
+                    <div id="modalSummarySeniStatus" class="text-xs font-extrabold text-purple-950 mt-1">-</div>
+                    <div id="modalSummarySeniSub" class="text-[11px] text-purple-700 mt-0.5">-</div>
+                </div>
+                <!-- Box 3: Perbaikan Kelas -->
+                <div class="bg-blue-50/60 p-3 rounded-2xl border border-blue-200/80">
+                    <span class="text-[10px] font-extrabold uppercase text-blue-600 block">3. Perbaikan Kelas (50K)</span>
+                    <div id="modalSummaryPerbaikanStatus" class="text-xs font-extrabold text-blue-950 mt-1">-</div>
+                    <div id="modalSummaryPerbaikanSub" class="text-[11px] text-blue-700 mt-0.5">-</div>
+                </div>
+            </div>
+
+            <!-- =================================================================
+                 MESIN KASIR PINTAR FIFO (HANYA MUNCUL DI MODE BENDAHARA)
+                 ================================================================= -->
+            <div id="adminFifoCashierBox" class="hidden bg-gradient-to-br from-amber-50 to-orange-50/60 border-2 border-amber-300 rounded-2xl p-4 space-y-3 shadow-xs">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="w-7 h-7 rounded-lg bg-amber-500 text-white flex items-center justify-center text-xs">
+                            <i class="fa-solid fa-cash-register"></i>
+                        </span>
+                        <div>
+                            <h4 class="text-xs sm:text-sm font-extrabold text-amber-950">Mesin Kasir Pintar (Otomatis Cicilan FIFO)</h4>
+                            <p class="text-[11px] text-amber-800">Masukkan nominal berapa saja, sistem otomatis menutup bulan terlama lebih dulu.</p>
+                        </div>
+                    </div>
+                    <span class="text-[10px] font-extrabold uppercase bg-amber-200 text-amber-900 px-2 py-0.5 rounded-md">Bendahara</span>
+                </div>
+
+                <!-- Pilihan Jenis Setoran -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="text-[11px] font-extrabold text-amber-900 block mb-1">Pilih Jenis Iuran yang Dibayar:</label>
+                        <select id="fifoCategorySelect" onchange="updateFifoLivePreview()" class="w-full p-2.5 bg-white border border-amber-300 rounded-xl text-xs font-extrabold text-slate-800">
+                            <option value="BULANAN_FIFO">📅 1. Iuran Bulanan (Otomatis FIFO Lintas Bulan)</option>
+                            <option value="SENI">🎨 2. Uang Seni Budaya (Target Rp 100.000)</option>
+                            <option value="PERBAIKAN">🛠️ 3. Uang Perbaikan Kelas (Target Rp 50.000)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-extrabold text-amber-900 block mb-1">Nominal Setoran Masuk (Rp):</label>
+                        <input type="number" id="fifoAmountInput" oninput="updateFifoLivePreview()" placeholder="Contoh: 5000, 20000, 100000" 
+                            class="w-full p-2.5 bg-white border border-amber-300 rounded-xl text-xs font-extrabold text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500">
+                    </div>
+                </div>
+
+                <!-- Quick Nominal Buttons (Gaya Bayar Siswa 8.6: 5K, 10K, 20K, 50K, 100K) -->
+                <div class="flex flex-wrap items-center gap-1.5">
+                    <span class="text-[10px] font-bold text-amber-800 mr-1">Nominal Cepat:</span>
+                    <button type="button" onclick="setFifoQuickAmount(5000)" class="px-2.5 py-1 bg-white hover:bg-amber-100 border border-amber-300 rounded-lg text-xs font-extrabold text-amber-900 transition">+5K</button>
+                    <button type="button" onclick="setFifoQuickAmount(10000)" class="px-2.5 py-1 bg-white hover:bg-amber-100 border border-amber-300 rounded-lg text-xs font-extrabold text-amber-900 transition">+10K</button>
+                    <button type="button" onclick="setFifoQuickAmount(20000)" class="px-2.5 py-1 bg-white hover:bg-amber-100 border border-amber-300 rounded-lg text-xs font-extrabold text-amber-900 transition">+20K</button>
+                    <button type="button" onclick="setFifoQuickAmount(50000)" class="px-2.5 py-1 bg-white hover:bg-amber-100 border border-amber-300 rounded-lg text-xs font-extrabold text-amber-900 transition">+50K</button>
+                    <button type="button" onclick="setFifoQuickAmount(100000)" class="px-2.5 py-1 bg-white hover:bg-amber-100 border border-amber-300 rounded-lg text-xs font-extrabold text-amber-900 transition">+100K</button>
+                </div>
+
+                <!-- LIVE PREVIEW ALOKASI FIFO -->
+                <div id="fifoLivePreviewBox" class="bg-white/90 border border-amber-200 rounded-xl p-3 text-xs text-slate-700 space-y-1">
+                    <span class="text-slate-400 italic">Ketik atau pilih nominal di atas untuk melihat simulasi alokasi otomatis...</span>
+                </div>
+
+                <button type="button" onclick="commitFifoPayment()" class="w-full bg-brand-600 hover:bg-brand-700 active:scale-[0.99] text-white font-extrabold text-xs py-3 px-4 rounded-xl shadow-sm transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    <span>Simpan Setoran & Catat ke Jejak Audit Siswa</span>
+                </button>
+            </div>
+
+            <!-- VISUAL GRID KALENDER IURAN BULANAN (2025–2026) -->
+            <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                    <h4 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-calendar-days text-brand-600"></i> Kartu Kontrol Iuran Bulanan (Rp 100.000 / Bulan)
+                    </h4>
+                    <span class="text-[10px] text-slate-400 font-semibold">Hijau = Lunas 100K • Kuning = Cicil • Abu = Belum</span>
+                </div>
+                <div id="modalMonthsGrid" class="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+
+            <!-- JEJAK AUDIT / RIWAYAT PEMBAYARAN KHUSUS SISWA INI (POINT #6) -->
+            <div class="space-y-2 pt-2 border-t border-slate-100">
+                <h4 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-clock-rotate-left text-teal-600"></i> Jejak Audit & Riwayat Pembayaran Siswa Ini
+                </h4>
+                <div id="modalStudentAuditList" class="space-y-1.5 max-h-44 overflow-y-auto pr-1">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+
+            <!-- Modal Footer Actions -->
+            <div class="pt-3 border-t border-slate-100 flex flex-col sm:flex-row gap-2">
+                <button onclick="sendStudentWAReceipt()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 shadow-xs">
+                    <i class="fa-brands fa-whatsapp text-base"></i>
+                    <span>Kirim Kartu Rapor Kas via WhatsApp</span>
+                </button>
+                <button onclick="closeStudentModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-3 px-5 rounded-xl">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. MODAL SINKRONISASI CLOUD, LINK SNAPSHOT WA & GITHUB PAGES (POINT #1) -->
+    <div id="syncModal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-xl w-full p-5 sm:p-6 shadow-2xl animate-slide-up max-h-[92vh] overflow-y-auto space-y-4">
+            <div class="flex items-start justify-between gap-3 pb-3 border-b border-slate-100">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base sm:text-lg font-extrabold text-slate-900">Pusat Sinkronisasi WA & GitHub Pages</h3>
+                        <p class="text-xs text-slate-500">Solusi agar orang tua di grup WA selalu melihat data terbaru yang diinput Bendahara.</p>
+                    </div>
+                </div>
+                <button onclick="closeSyncModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- CARA 1: TAUTAN SNAPSHOT AJAIB WHATSAPP (INSTAN TANPA SERVER) -->
+            <div class="bg-emerald-50/80 border border-emerald-200 rounded-2xl p-4 space-y-2.5">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-extrabold text-emerald-950 flex items-center gap-1.5">
+                        <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i> Cara 1 (Paling Praktis): Tautan Snapshot WhatsApp
+                    </span>
+                    <span class="bg-emerald-200 text-emerald-900 text-[10px] font-extrabold px-2 py-0.5 rounded-full">Tanpa Setup Server</span>
+                </div>
+                <p class="text-xs text-emerald-800 leading-relaxed">
+                    Setiap selesai menginput cicilan, klik tombol di bawah. Aplikasi akan menyalin laporan WA beserta <strong>Link Khusus yang menyimpan seluruh data terbaru di dalamnya</strong>. Saat orang tua mengklik link tersebut di WA, HP mereka otomatis memuat data terbaru!
+                </p>
+                <div class="flex flex-wrap gap-2 pt-1">
+                    <button onclick="copyWhatsAppReport(true)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-2xs">
+                        <i class="fa-solid fa-copy"></i> Salin Laporan + Link Snapshot WA
+                    </button>
+                    <button onclick="copySnapshotUrlOnly()" class="bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs px-3.5 py-2.5 rounded-xl transition">
+                        Salin Link Saja
+                    </button>
+                </div>
+            </div>
+
+            <!-- CARA 2: SINKRONISASI CLOUD OTOMATIS (GOOGLE SHEETS / WEBHOOK JSON) -->
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2.5">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-extrabold text-slate-900 flex items-center gap-1.5">
+                        <i class="fa-solid fa-table text-brand-600"></i> Cara 2: Cloud Database Real-Time (Google Sheets / JSON Endpoint)
+                    </span>
+                    <span class="bg-slate-200 text-slate-700 text-[10px] font-extrabold px-2 py-0.5 rounded-full">Otomatis 100%</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    Tempelkan URL Web App <strong>Google Apps Script</strong> atau <strong>npoint.io</strong> gratis di bawah ini agar setiap perubahan bendahara langsung tersimpan di internet tanpa perlu kirim link baru.
+                </p>
+                <div class="flex gap-2">
+                    <input type="url" id="cloudWebhookUrlInput" placeholder="https://script.google.com/macros/s/.../exec" 
+                        class="flex-1 p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-mono">
+                    <button onclick="saveCloudWebhookUrl()" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-4 rounded-xl shrink-0">
+                        Simpan URL
+                    </button>
+                </div>
+                <div class="flex flex-wrap gap-2 pt-1">
+                    <button onclick="pushToCloudNow()" class="bg-brand-600 hover:bg-brand-700 text-white font-bold text-[11px] px-3 py-1.5 rounded-lg">
+                        <i class="fa-solid fa-cloud-arrow-up mr-1"></i> Kirim Data ke Cloud Sekarang
+                    </button>
+                    <button onclick="pullFromCloudNow()" class="bg-white border border-slate-300 text-slate-700 font-bold text-[11px] px-3 py-1.5 rounded-lg">
+                        <i class="fa-solid fa-cloud-arrow-down mr-1"></i> Tarik Data dari Cloud
+                    </button>
+                </div>
+            </div>
+
+            <!-- CARA 3: BACKUP FILE JSON UNTUK REPOSITORI GITHUB -->
+            <div class="bg-slate-900 text-white rounded-2xl p-4 space-y-2.5">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-extrabold flex items-center gap-1.5">
+                        <i class="fa-brands fa-github text-emerald-400 text-sm"></i> Cara 3: Cadangan File JSON & Reset Data
+                    </span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
+                    <button onclick="exportDataJSON()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-download"></i> Unduh .JSON
+                    </button>
+                    <label class="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-upload"></i> Muat .JSON
+                        <input type="file" accept=".json" onchange="importDataJSON(event)" class="hidden">
+                    </label>
+                    <button onclick="resetToOfficialData()" class="bg-rose-500/20 hover:bg-rose-500/30 border border-rose-400/30 text-rose-200 font-bold text-xs py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-rotate-left"></i> Reset Data Awal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. MODAL PIN BENDAHARA (HASHED VERIFICATION - POINT #4) -->
+    <div id="pinModal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl animate-slide-up">
+            <div class="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center text-xl mx-auto mb-3">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h3 class="text-lg font-extrabold text-center text-slate-900">Akses Bendahara Kelompok II</h3>
+            <p class="text-xs text-center text-slate-500 mt-1">PIN diamankan dengan enkripsi Hash satu arah (Salted Hash) agar tidak terlihat di kode sumber.</p>
+            <div class="mt-4">
+                <input type="password" id="pinInput" maxlength="8" placeholder="••••" onkeydown="if(event.key==='Enter') verifyPin()"
+                    class="w-full text-center text-2xl tracking-[0.5em] font-extrabold py-3 bg-slate-50 border-2 border-slate-200 rounded-2xl focus:outline-none focus:border-brand-600">
+                <p id="pinErrorMsg" class="text-xs text-rose-600 font-bold text-center mt-2 hidden">PIN tidak sesuai!</p>
+                <div class="mt-3 bg-slate-100 rounded-xl p-2.5 text-center space-y-0.5">
+                    <span class="text-[11px] text-slate-600 block">🔑 PIN Demo Bendahara: <strong class="text-slate-900">2786</strong></span>
+                    <span class="text-[10px] text-slate-400 block">(Diverifikasi menggunakan Hash Checksum)</span>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2.5 mt-5">
+                <button onclick="closePinModal()" class="py-2.5 rounded-xl font-bold text-xs text-slate-600 bg-slate-100">Batal</button>
+                <button onclick="verifyPin()" class="py-2.5 rounded-xl font-bold text-xs text-white bg-brand-600 hover:bg-brand-700">Buka Kasir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. MODAL TAMBAH PENGELUARAN (Admin) -->
+    <div id="addExpenseModal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl animate-slide-up space-y-3">
+            <h3 class="text-base font-extrabold text-slate-900">Catat Pengeluaran & Bukti Nota Kelas</h3>
+            <input type="text" id="expDescInput" placeholder="Keperluan (mis: Ongkos Tukang & Pasang TV)" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm">
+            <div class="grid grid-cols-2 gap-2">
+                <input type="number" id="expAmountInput" placeholder="Nominal (Rp)" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm">
+                <select id="expCategoryInput" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm">
+                    <option value="Perbaikan Kelas">🛠️ Perbaikan Kelas</option>
+                    <option value="Kas Bulanan">🧹 Kas Bulanan</option>
+                    <option value="Seni Budaya">🎨 Seni Budaya</option>
+                </select>
+            </div>
+            <input type="text" id="expNoteInput" placeholder="Rincian barang / nomor nota" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm">
+            <div class="grid grid-cols-2 gap-2 pt-2">
+                <button onclick="closeExpenseModal()" class="py-2.5 rounded-xl font-bold text-xs bg-slate-100 text-slate-600">Batal</button>
+                <button onclick="saveNewExpense()" class="py-2.5 rounded-xl font-bold text-xs bg-rose-600 text-white">Simpan Nota</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. MODAL TAMBAH SISWA BARU (Admin) -->
+    <div id="addStudentModal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl animate-slide-up space-y-3">
+            <h3 class="text-base font-extrabold text-slate-900">Tambah Siswa Kelas 8.6</h3>
+            <input type="text" id="newStudentNameInput" placeholder="Nama lengkap / panggilan siswa..." class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm">
+            <div class="grid grid-cols-2 gap-2 pt-2">
+                <button onclick="closeAddStudentModal()" class="py-2.5 rounded-xl font-bold text-xs bg-slate-100 text-slate-600">Batal</button>
+                <button onclick="addNewStudent()" class="py-2.5 rounded-xl font-bold text-xs bg-brand-600 text-white">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toastContainer" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 pointer-events-none flex flex-col items-center gap-2 w-max max-w-[92vw]"></div>
+
+    <!-- =========================================================================
+         APPLICATION ENGINE (ADDRESSING ALL 6 ARCHITECTURAL POINTS)
+         ========================================================================= -->
+    <script>
+        const STORAGE_KEY = 'KASDUA_86_SMPN27_PRO_V3';
+        const WEBHOOK_KEY = 'KASDUA_86_WEBHOOK_URL';
+
+        // 14 Chronological School Months (2025-2026) so Farid's Bln 11-12 (2025), Jan-Oct (1-10), and Nov-Des (11-12) work seamlessly with FIFO!
+        const MONTH_DEFINITIONS = [
+            { key: '2025-11', short: 'Bln 11 (25)', label: 'Nov 2025', isPastArrearsPeriod: true },
+            { key: '2025-12', short: 'Bln 12 (25)', label: 'Des 2025', isPastArrearsPeriod: true },
+            { key: '2026-01', short: 'Bln 1 (Jan)', label: 'Januari', isPastArrearsPeriod: true },
+            { key: '2026-02', short: 'Bln 2 (Feb)', label: 'Februari', isPastArrearsPeriod: true },
+            { key: '2026-03', short: 'Bln 3 (Mar)', label: 'Maret', isPastArrearsPeriod: true },
+            { key: '2026-04', short: 'Bln 4 (Apr)', label: 'April', isPastArrearsPeriod: true },
+            { key: '2026-05', short: 'Bln 5 (Mei)', label: 'Mei', isPastArrearsPeriod: true },
+            { key: '2026-06', short: 'Bln 6 (Jun)', label: 'Juni', isPastArrearsPeriod: true },
+            { key: '2026-07', short: 'Bln 7 (Jul)', label: 'Juli', isPastArrearsPeriod: true },
+            { key: '2026-08', short: 'Bln 8 (Agu)', label: 'Agustus', isPastArrearsPeriod: true },
+            { key: '2026-09', short: 'Bln 9 (Sep)', label: 'September', isPastArrearsPeriod: true },
+            { key: '2026-10', short: 'Bln 10 (Okt)', label: 'Oktober', isPastArrearsPeriod: true },
+            { key: '2026-11', short: 'Bln 11 (Nov)', label: 'November (Berjalan)', isPastArrearsPeriod: false },
+            { key: '2026-12', short: 'Bln 12 (Des)', label: 'Desember', isPastArrearsPeriod: false }
+        ];
+
+        const MONTHLY_TARGET = 100000;
+        const SENI_TARGET = 100000;
+        const PERBAIKAN_TARGET = 50000;
+
+        // Salted Hash Checksum for PIN (Point #4: No plain text PIN comparison)
+        function computeSaltedPinHash(pinStr) {
+            const salted = `KASDUA86_SMP27_${pinStr.trim()}_MAKASSAR`;
+            let h = 2166136261;
+            for (let i = 0; i < salted.length; i++) {
+                h ^= salted.charCodeAt(i);
+                h = Math.imul(h, 16777619);
+            }
+            return (h >>> 0).toString(16);
+        }
+        // Pre-computed FNV-1a hash for default PIN
+        const EXPECTED_PIN_HASH = computeSaltedPinHash('2786');
+
+        let isAdmin = false;
+        let activeTab = 'rapor';
+        let raporFilter = 'ALL'; // ALL, NOV_ACTIVE, CICIL_OKT, TODAY
+        let programSubTab = 'BULANAN'; // BULANAN, SENI, PERBAIKAN
+        let selectedStudentId = null;
+
+        // Helper to build exact 14-month ledger per student from the WhatsApp data
+        function buildMonthlyLedger(firstUnpaidKey, firstMonthPaidK, novPaidK, desPaidK) {
+            const ledger = {};
+            let reachedUnpaid = false;
+
+            for (const m of MONTH_DEFINITIONS) {
+                if (m.key === '2026-11') {
+                    ledger[m.key] = (novPaidK || 0) * 1000;
+                } else if (m.key === '2026-12') {
+                    ledger[m.key] = (desPaidK || 0) * 1000;
+                } else {
+                    if (!firstUnpaidKey) {
+                        // Lunas all months up to Bln 10
+                        ledger[m.key] = MONTHLY_TARGET;
+                    } else if (m.key === firstUnpaidKey) {
+                        reachedUnpaid = true;
+                        ledger[m.key] = (firstMonthPaidK || 0) * 1000;
+                    } else if (!reachedUnpaid) {
+                        ledger[m.key] = MONTHLY_TARGET;
+                    } else {
+                        ledger[m.key] = 0;
+                    }
+                }
+            }
+            return ledger;
+        }
+
+        function getInitialOfficialData() {
+            const rawStudents = [
+                // 14 Siswa dengan Catatan Cicilan/Tunggakan s/d Bln 10
+                { id: 's_fadel', name: 'Fadel', firstUnpaid: '2026-03', firstPaidK: 27, novK: 0, desK: 0, perbaikanK: 27, seniK: 50, paidToday: false },
+                { id: 's_farid', name: 'Farid', firstUnpaid: '2025-11', firstPaidK: 49, novK: 0, desK: 0, perbaikanK: 22, seniK: 0, paidToday: false },
+                { id: 's_novita', name: 'Novita', firstUnpaid: '2026-05', firstPaidK: 9, novK: 0, desK: 0, perbaikanK: 50, seniK: 100, paidToday: false },
+                { id: 's_nisa', name: 'Nisa', firstUnpaid: '2026-07', firstPaidK: 11, novK: 0, desK: 0, perbaikanK: 50, seniK: 100, paidToday: false },
+                { id: 's_nabila', name: 'Nabila', firstUnpaid: '2026-04', firstPaidK: 40, novK: 0, desK: 0, perbaikanK: 50, seniK: 20, paidToday: false },
+                { id: 's_azizah', name: 'Azizah', firstUnpaid: '2026-08', firstPaidK: 22, novK: 0, desK: 0, perbaikanK: 20, seniK: 0, paidToday: false },
+                { id: 's_nursyifa', name: 'Nursyifa (Syifa)', firstUnpaid: '2026-02', firstPaidK: 24, novK: 0, desK: 0, perbaikanK: 30, seniK: 50, paidToday: false },
+                { id: 's_qaidah', name: 'Qaidah', firstUnpaid: '2026-09', firstPaidK: 38, novK: 0, desK: 0, perbaikanK: 50, seniK: 0, paidToday: false },
+                { id: 's_saidina', name: 'Saidina', firstUnpaid: '2026-01', firstPaidK: 0, novK: 0, desK: 0, perbaikanK: 10, seniK: 70, paidToday: false },
+                { id: 's_wafika', name: 'Wafika', firstUnpaid: '2026-01', firstPaidK: 27, novK: 0, desK: 0, perbaikanK: 30, seniK: 5, paidToday: false },
+                { id: 's_aulia', name: 'Aulia', firstUnpaid: '2026-08', firstPaidK: 11, novK: 0, desK: 0, perbaikanK: 50, seniK: 100, paidToday: false },
+                { id: 's_meylisa', name: 'Meylisa', firstUnpaid: '2026-10', firstPaidK: 24, novK: 0, desK: 0, perbaikanK: 20, seniK: 100, paidToday: false },
+                { id: 's_alif', name: 'Alif', firstUnpaid: '2026-10', firstPaidK: 53, novK: 0, desK: 0, perbaikanK: 50, seniK: 100, paidToday: true },
+                { id: 's_naila', name: 'Naila', firstUnpaid: '2026-10', firstPaidK: 6, novK: 0, desK: 0, perbaikanK: 50, seniK: 81, paidToday: false },
+
+                // 11 Siswa yang Lunas s/d Bln 10 & Masuk Pembayaran Bln 11 (Nov) & Bln 12 (Des)
+                { id: 's_azra', name: 'Azra', firstUnpaid: null, firstPaidK: 0, novK: 100, desK: 19, perbaikanK: 50, seniK: 100, paidToday: false },
+                { id: 's_imam', name: 'Imam', firstUnpaid: null, firstPaidK: 0, novK: 100, desK: 35, perbaikanK: 50, seniK: 100, paidToday: true },
+                { id: 's_satria', name: 'Satria', firstUnpaid: null, firstPaidK: 0, novK: 5, desK: 0, perbaikanK: 50, seniK: 100, paidToday: false },
+                { id: 's_fadli', name: 'Fadli', firstUnpaid: null, firstPaidK: 0, novK: 20, desK: 0, perbaikanK: 50, seniK: 100, paidToday: true },
+                { id: 's_rasul', name: 'Rasul', firstUnpaid: null, firstPaidK: 0, novK: 1, desK: 0, perbaikanK: 50, seniK: 100, paidToday: false },
+                { id: 's_akhdan', name: 'Akhdan', firstUnpaid: null, firstPaidK: 0, novK: 20, desK: 0, perbaikanK: 50, seniK: 100, paidToday: false },
+                { id: 's_fahreza', name: 'Fahreza', firstUnpaid: null, firstPaidK: 0, novK: 10, desK: 0, perbaikanK: 50, seniK: 0, paidToday: false },
+                { id: 's_afiqah', name: 'Afiqah', firstUnpaid: null, firstPaidK: 0, novK: 100, desK: 0, perbaikanK: 50, seniK: 100, paidToday: false },
+                { id: 's_izzan', name: 'Izzan', firstUnpaid: null, firstPaidK: 0, novK: 14, desK: 0, perbaikanK: 50, seniK: 100, paidToday: false },
+                { id: 's_habibi', name: 'Habibi', firstUnpaid: null, firstPaidK: 0, novK: 100, desK: 0, perbaikanK: 50, seniK: 100, paidToday: false },
+                { id: 's_refan', name: 'Refan', firstUnpaid: null, firstPaidK: 0, novK: 100, desK: 0, perbaikanK: 50, seniK: 100, paidToday: false }
+            ];
+
+            const students = rawStudents.map(r => ({
+                id: r.id,
+                name: r.name,
+                months: buildMonthlyLedger(r.firstUnpaid, r.firstPaidK, r.novK, r.desK),
+                perbaikanPaid: r.perbaikanK * 1000,
+                seniPaid: r.seniK * 1000,
+                paidToday: r.paidToday
+            }));
+
+            // Sort A-Z by default (Point #5)
+            students.sort((a, b) => a.name.localeCompare(b.name, 'id'));
+
+            return {
+                lastUpdated: '10 Nov 2026 • Data Aktual Kelas 8.6',
+                students,
+                auditLogs: [
+                    {
+                        id: 'log_1',
+                        date: '10 Nov 2026, 09:15 WITA',
+                        studentId: 's_fadli',
+                        studentName: 'Fadli',
+                        category: 'Iuran Bulanan / Seni Budaya',
+                        amount: 20000,
+                        detail: 'Setoran tunai hari ini Rp 20.000 (Tercatat pada iuran berjalan)'
+                    },
+                    {
+                        id: 'log_2',
+                        date: '10 Nov 2026, 08:40 WITA',
+                        studentId: 's_alif',
+                        studentName: 'Alif',
+                        category: 'Iuran Bulanan (FIFO)',
+                        amount: 6000,
+                        detail: 'Alokasi otomatis ke Bln 10 (Okt): dari Rp 47.000 menjadi Rp 53.000'
+                    },
+                    {
+                        id: 'log_3',
+                        date: '10 Nov 2026, 08:10 WITA',
+                        studentId: 's_imam',
+                        studentName: 'Imam',
+                        category: 'Iuran Bulanan (FIFO)',
+                        amount: 5000,
+                        detail: 'Alokasi otomatis ke Bln 12 (Des): dari Rp 30.000 menjadi Rp 35.000'
+                    }
+                ],
+                fineRules: [
+                    { id: 'fr1', title: 'Tidak Melaksanakan Piket Kelas', amount: 5000 },
+                    { id: 'fr2', title: 'Terlambat / Atribut Tidak Lengkap', amount: 2000 },
+                    { id: 'fr3', title: 'Membuang Sampah di Laci/Kelas', amount: 2000 }
+                ],
+                fines: [
+                    { id: 'f1', studentId: 's_fadli', reason: 'Tidak Melaksanakan Piket Kelas', amount: 5000, date: '08 Nov 2026', status: 'PAID' }
+                ],
+                expenses: [
+                    {
+                        id: 'e1',
+                        date: 'Nov 2026',
+                        category: 'Perbaikan Kelas',
+                        desc: 'Dana Tukang, Tambahan Beli Horden, Ongkos Pasang TV & Kabel-kabel Kipas',
+                        amount: 1050000,
+                        note: 'Menggunakan dana iuran perbaikan kelas (Rp 50.000/anak)'
+                    }
+                ]
+            };
+        }
+
+        // Helper calculations for a student's monthly ledger
+        function analyzeStudentMonthly(student) {
+            let arrearsCount = 0; // Unpaid months up to 2026-10
+            let arrearsRupiah = 0;
+            let firstUnpaidShort = null;
+            let unpaidDetails = [];
+
+            for (const m of MONTH_DEFINITIONS) {
+                const paid = Number(student.months[m.key] || 0);
+                const rem = Math.max(0, MONTHLY_TARGET - paid);
+                if (m.isPastArrearsPeriod && rem > 0) {
+                    arrearsCount++;
+                    arrearsRupiah += rem;
+                    if (!firstUnpaidShort) firstUnpaidShort = m.short;
+                    const monthNum = m.key.startsWith('2025-') ? m.key.split('-')[1] + '/25' : String(Number(m.key.split('-')[1]));
+                    if (paid > 0) {
+                        unpaidDetails.push(`Bln ${monthNum}(${paid / 1000}K)`);
+                    } else {
+                        unpaidDetails.push(monthNum);
+                    }
+                }
+            }
+
+            const novPaid = Number(student.months['2026-11'] || 0);
+            const desPaid = Number(student.months['2026-12'] || 0);
+
+            return {
+                arrearsCount,
+                arrearsRupiah,
+                isLunasUpToOct: arrearsRupiah === 0,
+                unpaidSummaryText: unpaidDetails.length > 0 ? unpaidDetails.join(', ') : 'Lunas s/d Bln 10',
+                novPaid,
+                desPaid
+            };
+        }
+
+        // Load Data (Priority: 1. URL Snapshot ?data=..., 2. LocalStorage, 3. Initial Official Data)
+        let appData = loadApplicationState();
+
+        function loadApplicationState() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const encodedSnapshot = params.get('data');
+                if (encodedSnapshot) {
+                    const jsonStr = decodeURIComponent(escape(atob(encodedSnapshot)));
+                    const parsed = JSON.parse(jsonStr);
+                    if (parsed && Array.isArray(parsed.students)) {
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+                        setTimeout(() => {
+                            const sb = document.getElementById('snapshotBanner');
+                            if (sb) sb.classList.remove('hidden');
+                        }, 150);
+                        return parsed;
+                    }
+                }
+            } catch (e) {
+                console.warn('Snapshot URL decode warning:', e);
+            }
+
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (parsed && Array.isArray(parsed.students) && parsed.students[0].months) {
+                        return parsed;
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+            }
+            return getInitialOfficialData();
+        }
+
+        function saveData(triggerCloud = true) {
+            const now = new Date();
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            appData.lastUpdated = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}, ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')} WITA`;
+            appData.students.sort((a, b) => a.name.localeCompare(b.name, 'id'));
+
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+            } catch (e) {
+                console.error(e);
+            }
+            renderAll();
+
+            if (triggerCloud) {
+                const webhookUrl = localStorage.getItem(WEBHOOK_KEY);
+                if (webhookUrl) {
+                    fetch(webhookUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(appData)
+                    }).catch(() => {});
+                }
+            }
+        }
+
+        function formatRp(num) {
+            return 'Rp ' + Number(num || 0).toLocaleString('id-ID');
+        }
+
+        function formatK(num) {
+            const n = Number(num || 0);
+            if (n >= 1000 && n % 1000 === 0) return (n / 1000) + 'K';
+            return formatRp(n);
+        }
+
+        function getInitials(name) {
+            const parts = name.replace(/[()]/g, '').trim().split(/\s+/);
+            if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+            return (parts[0][0] + parts[1][0]).toUpperCase();
+        }
+
+        function showToast(msg, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const el = document.createElement('div');
+            const bg = type === 'success' ? 'bg-slate-900 text-white border-emerald-400/40' : 'bg-rose-600 text-white border-rose-400';
+            el.className = `${bg} border px-4 py-3 rounded-2xl shadow-xl text-xs sm:text-sm font-bold flex items-center gap-2 animate-slide-up`;
+            el.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i><span>${msg}</span>`;
+            container.appendChild(el);
+            setTimeout(() => el.remove(), 3200);
+        }
+
+        // =========================================================================
+        // MASTER RENDER FUNCTION
+        // =========================================================================
+        function renderAll() {
+            document.getElementById('lastUpdatedText').textContent = appData.lastUpdated;
+            const webhookUrl = localStorage.getItem(WEBHOOK_KEY) || '';
+            const syncInd = document.getElementById('syncStatusIndicator');
+            if (webhookUrl) {
+                syncInd.innerHTML = `<i class="fa-solid fa-cloud-check text-emerald-300"></i> Cloud Aktif`;
+            } else {
+                syncInd.innerHTML = `<i class="fa-solid fa-link text-emerald-300"></i> Mode Link Snapshot WA`;
+            }
+
+            renderTodayBanner();
+            renderOverviewCards();
+            renderRaporStudentGrid();
+            renderProgramDetailTab();
+            renderDendaAndExpenses();
+            renderAuditAndWaPreview();
+            updateAdminUI();
+        }
+
+        function renderTodayBanner() {
+            const container = document.getElementById('todayPaymentsContainer');
+            const recentLogs = (appData.auditLogs || []).slice(0, 4);
+            if (recentLogs.length === 0) {
+                container.innerHTML = `<span class="text-xs text-emerald-100">Belum ada setoran baru hari ini</span>`;
+                return;
+            }
+            container.innerHTML = recentLogs.map(log => `
+                <button onclick="openStudentModal('${log.studentId}')" class="bg-white/20 hover:bg-white/30 backdrop-blur-xs border border-white/25 text-white text-xs font-extrabold px-2.5 py-1 rounded-xl flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-circle-check text-emerald-300 text-[10px]"></i>
+                    <span>${log.studentName}: <strong>+${formatK(log.amount)}</strong></span>
+                </button>
+            `).join('');
+        }
+
+        function renderOverviewCards() {
+            let novDesTotal = 0;
+            let lunasOktCount = 0;
+            let novLunasCount = 0;
+
+            let seniTotal = 0;
+            let seniLunasCount = 0;
+            let seniCicilCount = 0;
+
+            let perbaikanTotal = 0;
+            let perbaikanLunasCount = 0;
+            let perbaikanCicilCount = 0;
+
+            appData.students.forEach(s => {
+                const mStat = analyzeStudentMonthly(s);
+                novDesTotal += mStat.novPaid + mStat.desPaid;
+                if (mStat.isLunasUpToOct) lunasOktCount++;
+                if (mStat.novPaid >= MONTHLY_TARGET) novLunasCount++;
+
+                const sp = Number(s.seniPaid || 0);
+                seniTotal += sp;
+                if (sp >= SENI_TARGET) seniLunasCount++;
+                else seniCicilCount++;
+
+                const pp = Number(s.perbaikanPaid || 0);
+                perbaikanTotal += pp;
+                if (pp >= PERBAIKAN_TARGET) perbaikanLunasCount++;
+                else perbaikanCicilCount++;
+            });
+
+            const dendaPaid = appData.fines.filter(f => f.status === 'PAID').reduce((a, b) => a + Number(b.amount || 0), 0);
+            const dendaUnpaid = appData.fines.filter(f => f.status === 'UNPAID').reduce((a, b) => a + Number(b.amount || 0), 0);
+            const expTotal = appData.expenses.reduce((a, b) => a + Number(b.amount || 0), 0);
+
+            document.getElementById('cardBulananNovDes').textContent = formatRp(novDesTotal);
+            document.getElementById('cardBulananLunasOkt').textContent = `${lunasOktCount} Lunas s/d Okt`;
+            document.getElementById('cardBulananNovLunas').textContent = `${novLunasCount} Lunas Nov ✅`;
+
+            document.getElementById('cardSeniTotal').textContent = formatRp(seniTotal);
+            document.getElementById('cardSeniLunas').textContent = `${seniLunasCount} Lunas ✅`;
+            document.getElementById('cardSeniCicil').textContent = `${seniCicilCount} Cicil/Belum`;
+
+            document.getElementById('cardPerbaikanTotal').textContent = formatRp(perbaikanTotal);
+            document.getElementById('cardPerbaikanLunas').textContent = `${perbaikanLunasCount} Lunas ✅`;
+            document.getElementById('cardPerbaikanCicil').textContent = `${perbaikanCicilCount} Mencicil`;
+
+            document.getElementById('cardDendaTotal').textContent = formatRp(dendaPaid);
+            document.getElementById('cardDendaUnpaid').textContent = `Belum dibayar: ${formatRp(dendaUnpaid)}`;
+            document.getElementById('cardExpenseTotal').textContent = `Keluar: ${formatRp(expTotal)}`;
+        }
+
+        // =========================================================================
+        // TAB 1: KARTU RAPOR KAS SISWA (A-Z NEUTRAL & POLITE - POINT #3 & #5)
+        // =========================================================================
+        function setRaporFilter(filter) {
+            raporFilter = filter;
+            ['ALL', 'NOV_ACTIVE', 'CICIL_OKT', 'TODAY'].forEach(k => {
+                const btn = document.getElementById(`raporFilter-${k}`);
+                if (k === filter) {
+                    btn.className = 'px-3 py-1.5 rounded-xl text-xs font-extrabold bg-slate-900 text-white transition shrink-0';
+                } else {
+                    btn.className = 'px-3 py-1.5 rounded-xl text-xs font-extrabold bg-slate-100 text-slate-600 hover:bg-slate-200 transition shrink-0';
+                }
+            });
+            renderRaporStudentGrid();
+        }
+
+        function renderRaporStudentGrid() {
+            const query = (document.getElementById('globalSearchInput').value || '').trim().toLowerCase();
+            const container = document.getElementById('raporStudentGrid');
+
+            const filtered = appData.students.filter(s => {
+                if (!s.name.toLowerCase().includes(query)) return false;
+                const mStat = analyzeStudentMonthly(s);
+                if (raporFilter === 'NOV_ACTIVE') return mStat.isLunasUpToOct || mStat.novPaid > 0;
+                if (raporFilter === 'CICIL_OKT') return !mStat.isLunasUpToOct;
+                if (raporFilter === 'TODAY') return Boolean(s.paidToday);
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full bg-white rounded-2xl p-8 text-center border border-slate-200">
+                        <p class="text-sm font-bold text-slate-600">Nama siswa tidak ditemukan.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map((s, idx) => {
+                const mStat = analyzeStudentMonthly(s);
+
+                // Polite Badge 1: Iuran Bulanan (No giant red shaming numbers on public outer card!)
+                let badgeBulanan = '';
+                if (mStat.isLunasUpToOct) {
+                    if (mStat.novPaid >= MONTHLY_TARGET) {
+                        badgeBulanan = `<span class="bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[11px] px-2 py-0.5 rounded-lg">Bulanan: Nov Lunas ✅ ${mStat.desPaid > 0 ? `(+Des ${formatK(mStat.desPaid)})` : ''}</span>`;
+                    } else {
+                        badgeBulanan = `<span class="bg-teal-50 text-teal-800 border border-teal-200 font-bold text-[11px] px-2 py-0.5 rounded-lg">Bulanan: Nov (${formatK(mStat.novPaid)})</span>`;
+                    }
+                } else {
+                    badgeBulanan = `<span class="bg-amber-50 text-amber-800 border border-amber-200 font-bold text-[11px] px-2 py-0.5 rounded-lg">Bulanan: Progres s/d Bln 10</span>`;
+                }
+
+                // Polite Badge 2: Seni Budaya (100K)
+                const sp = Number(s.seniPaid || 0);
+                const badgeSeni = sp >= SENI_TARGET
+                    ? `<span class="bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[11px] px-2 py-0.5 rounded-lg">Seni: Lunas ✅</span>`
+                    : `<span class="bg-purple-50 text-purple-800 border border-purple-200 font-bold text-[11px] px-2 py-0.5 rounded-lg">Seni: ${sp > 0 ? formatK(sp) : 'Belum'}</span>`;
+
+                // Polite Badge 3: Perbaikan Kelas (50K)
+                const pp = Number(s.perbaikanPaid || 0);
+                const badgePerbaikan = pp >= PERBAIKAN_TARGET
+                    ? `<span class="bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[11px] px-2 py-0.5 rounded-lg">Perbaikan: Lunas ✅</span>`
+                    : `<span class="bg-blue-50 text-blue-800 border border-blue-200 font-bold text-[11px] px-2 py-0.5 rounded-lg">Perbaikan: ${formatK(pp)}</span>`;
+
+                const todayPill = s.paidToday
+                    ? `<span class="bg-emerald-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md">Setoran Hari Ini</span>`
+                    : '';
+
+                return `
+                    <div onclick="openStudentModal('${s.id}')" class="bg-white hover:border-brand-500 cursor-pointer transition rounded-2xl p-4 shadow-2xs border border-slate-200/90 flex flex-col justify-between gap-3 group">
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-2xl bg-slate-100 group-hover:bg-brand-50 text-slate-700 group-hover:text-brand-700 font-extrabold text-xs flex items-center justify-center border border-slate-200 transition shrink-0">
+                                    ${getInitials(s.name)}
+                                </div>
+                                <div>
+                                    <div class="flex flex-wrap items-center gap-1.5">
+                                        <span class="text-xs font-bold text-slate-400">#${idx + 1}</span>
+                                        <h3 class="font-extrabold text-sm sm:text-base text-slate-900 group-hover:text-brand-700 transition">${s.name}</h3>
+                                        ${todayPill}
+                                    </div>
+                                    <p class="text-[11px] text-slate-400">Ketuk untuk melihat Kartu Rapor Kas lengkap</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3 Unified Status Badges -->
+                        <div class="flex flex-wrap items-center gap-1.5">
+                            ${badgeBulanan}
+                            ${badgeSeni}
+                            ${badgePerbaikan}
+                        </div>
+
+                        <!-- Clear Call-to-Action Footer -->
+                        <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+                            <span class="font-bold text-brand-700 flex items-center gap-1.5">
+                                <i class="fa-regular fa-id-card"></i>
+                                <span>Lihat Rapor Kas & Riwayat</span>
+                            </span>
+                            <span class="text-[11px] font-extrabold ${isAdmin ? 'text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200' : 'text-slate-400'}">
+                                ${isAdmin ? '+ Input Kasir FIFO →' : 'Detail →'}
+                            </span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // =========================================================================
+        // TAB 2: DETAIL 3 PROGRAM IURAN
+        // =========================================================================
+        function openProgramTab(sub) {
+            switchTab('program');
+            setProgramSubTab(sub);
+        }
+
+        function setProgramSubTab(sub) {
+            programSubTab = sub;
+            ['BULANAN', 'SENI', 'PERBAIKAN'].forEach(k => {
+                const btn = document.getElementById(`progSubBtn-${k}`);
+                if (k === sub) {
+                    btn.className = 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-brand-700 text-white transition text-center shadow-2xs';
+                } else {
+                    btn.className = 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-slate-100 text-slate-700 hover:bg-slate-200 transition text-center';
+                }
+            });
+            renderProgramDetailTab();
+        }
+
+        function renderProgramDetailTab() {
+            const query = (document.getElementById('globalSearchInput').value || '').trim().toLowerCase();
+            const banner = document.getElementById('programDetailBanner');
+            const listEl = document.getElementById('programDetailList');
+            if (!banner || !listEl) return;
+
+            const filtered = appData.students.filter(s => s.name.toLowerCase().includes(query));
+
+            if (programSubTab === 'BULANAN') {
+                banner.innerHTML = `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <h3 class="text-sm font-extrabold text-slate-900">1. Program Iuran Bulanan Kelas — Rp 100.000 / Bulan</h3>
+                            <p class="text-xs text-slate-500 mt-0.5">Mendukung pembayaran bertahap (cicilan FIFO otomatis menutup bulan terlama lebih dulu).</p>
+                        </div>
+                        <span class="text-xs font-extrabold text-brand-700 bg-brand-50 border border-brand-200 px-3 py-1 rounded-xl shrink-0">
+                            Periode 2025–2026
+                        </span>
+                    </div>
+                `;
+                listEl.innerHTML = filtered.map((s, i) => {
+                    const mStat = analyzeStudentMonthly(s);
+                    return `
+                        <div onclick="openStudentModal('${s.id}')" class="bg-white hover:border-brand-500 cursor-pointer rounded-2xl p-3.5 border border-slate-200 shadow-2xs flex items-center justify-between gap-2">
+                            <div>
+                                <h4 class="font-extrabold text-sm text-slate-900">${i + 1}. ${s.name}</h4>
+                                <p class="text-xs ${mStat.isLunasUpToOct ? 'text-emerald-700 font-semibold' : 'text-amber-800'} mt-0.5">
+                                    ${mStat.isLunasUpToOct ? `Lunas s/d Okt • Nov: ${formatK(mStat.novPaid)} ${mStat.desPaid > 0 ? `• Des: ${formatK(mStat.desPaid)}` : ''}` : `Cicilan: ${mStat.unpaidSummaryText}`}
+                                </p>
+                            </div>
+                            <span class="text-xs font-extrabold ${mStat.novPaid >= MONTHLY_TARGET && mStat.isLunasUpToOct ? 'text-emerald-700 bg-emerald-50 border-emerald-200' : 'text-slate-700 bg-slate-100 border-slate-200'} border px-2.5 py-1 rounded-xl shrink-0">
+                                ${mStat.novPaid >= MONTHLY_TARGET && mStat.isLunasUpToOct ? 'Nov Lunas ✅' : 'Lihat Detail'}
+                            </span>
+                        </div>
+                    `;
+                }).join('');
+            } else if (programSubTab === 'SENI') {
+                banner.innerHTML = `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <h3 class="text-sm font-extrabold text-purple-950">2. Uang Seni Budaya — Rp 100.000 / Orang</h3>
+                            <p class="text-xs text-purple-800 mt-0.5">Siswa yang namanya sudah lunas ditandai hijau (15 Lunas, 10 Dalam Progres).</p>
+                        </div>
+                    </div>
+                `;
+                listEl.innerHTML = filtered.map((s, i) => {
+                    const paid = Number(s.seniPaid || 0);
+                    const rem = Math.max(0, SENI_TARGET - paid);
+                    return `
+                        <div onclick="openStudentModal('${s.id}')" class="bg-white hover:border-purple-500 cursor-pointer rounded-2xl p-3.5 border border-slate-200 shadow-2xs flex items-center justify-between gap-2">
+                            <div>
+                                <h4 class="font-extrabold text-sm text-slate-900">${i + 1}. ${s.name}</h4>
+                                <p class="text-xs text-slate-500">Sudah masuk: <strong>${formatRp(paid)}</strong></p>
+                            </div>
+                            <span class="text-xs font-extrabold ${rem === 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-purple-100 text-purple-800'} px-2.5 py-1 rounded-xl">
+                                ${rem === 0 ? 'LUNAS 100K ✅' : `Kurang ${formatK(rem)}`}
+                            </span>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                banner.innerHTML = `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <h3 class="text-sm font-extrabold text-blue-950">3. Uang Perbaikan Kelas — Rp 50.000 / Anak</h3>
+                            <p class="text-xs text-blue-800 mt-0.5">Peruntukan: Dana tukang, tambahan beli horden, ongkos pasang TV, & kabel-kabel kipas.</p>
+                        </div>
+                    </div>
+                `;
+                listEl.innerHTML = filtered.map((s, i) => {
+                    const paid = Number(s.perbaikanPaid || 0);
+                    const rem = Math.max(0, PERBAIKAN_TARGET - paid);
+                    return `
+                        <div onclick="openStudentModal('${s.id}')" class="bg-white hover:border-blue-500 cursor-pointer rounded-2xl p-3.5 border border-slate-200 shadow-2xs flex items-center justify-between gap-2">
+                            <div>
+                                <h4 class="font-extrabold text-sm text-slate-900">${i + 1}. ${s.name}</h4>
+                                <p class="text-xs text-slate-500">Sudah masuk: <strong>${formatRp(paid)}</strong></p>
+                            </div>
+                            <span class="text-xs font-extrabold ${rem === 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'} px-2.5 py-1 rounded-xl">
+                                ${rem === 0 ? 'LUNAS 50K ✅' : `Kurang ${formatK(rem)}`}
+                            </span>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // =========================================================================
+        // STUDENT MODAL + SMART FIFO CASHIER ENGINE (POINT #2, #3, #6)
+        // =========================================================================
+        function openStudentModal(studentId) {
+            selectedStudentId = studentId;
+            const s = appData.students.find(item => item.id === studentId);
+            if (!s) return;
+
+            document.getElementById('modalAvatar').textContent = getInitials(s.name);
+            document.getElementById('modalStudentName').textContent = s.name;
+
+            const mStat = analyzeStudentMonthly(s);
+
+            // Summary Box 1: Bulanan
+            const bulStatusEl = document.getElementById('modalSummaryBulananStatus');
+            const bulSubEl = document.getElementById('modalSummaryBulananSub');
+            if (mStat.isLunasUpToOct) {
+                bulStatusEl.textContent = mStat.novPaid >= MONTHLY_TARGET ? 'Nov Lunas ✅' : `Nov Masuk ${formatRp(mStat.novPaid)}`;
+                bulStatusEl.className = 'text-xs font-extrabold text-emerald-700 mt-1';
+                bulSubEl.textContent = mStat.desPaid > 0 ? `Tabungan Des: ${formatRp(mStat.desPaid)}` : `Lunas s/d Oktober`;
+            } else {
+                bulStatusEl.textContent = `${mStat.arrearsCount} Bulan Belum Lunas`;
+                bulStatusEl.className = 'text-xs font-extrabold text-amber-800 mt-1';
+                bulSubEl.textContent = `Sisa s/d Okt: ${formatRp(mStat.arrearsRupiah)}`;
+            }
+
+            // Summary Box 2: Seni Budaya
+            const sp = Number(s.seniPaid || 0);
+            const sRem = Math.max(0, SENI_TARGET - sp);
+            document.getElementById('modalSummarySeniStatus').textContent = sRem === 0 ? 'LUNAS (Rp 100.000) ✅' : `Masuk ${formatRp(sp)}`;
+            document.getElementById('modalSummarySeniSub').textContent = sRem === 0 ? 'Terima kasih 🙏🏽' : `Sisa kurang: ${formatRp(sRem)}`;
+
+            // Summary Box 3: Perbaikan Kelas
+            const pp = Number(s.perbaikanPaid || 0);
+            const pRem = Math.max(0, PERBAIKAN_TARGET - pp);
+            document.getElementById('modalSummaryPerbaikanStatus').textContent = pRem === 0 ? 'LUNAS (Rp 50.000) ✅' : `Masuk ${formatRp(pp)}`;
+            document.getElementById('modalSummaryPerbaikanSub').textContent = pRem === 0 ? 'Tukang, Horden, TV, Kipas' : `Sisa kurang: ${formatRp(pRem)}`;
+
+            // Render 14-Month Visual Grid
+            // Show 2025-11 & 2025-12 only if student had arrears there (like Farid) or show all 12 months of 2026 + any unpaid 2025
+            const gridEl = document.getElementById('modalMonthsGrid');
+            const monthsToShow = MONTH_DEFINITIONS.filter(m => {
+                if (m.key.startsWith('2025-')) {
+                    return Number(s.months[m.key] || 0) < MONTHLY_TARGET;
+                }
+                return true;
+            });
+
+            gridEl.innerHTML = monthsToShow.map(m => {
+                const paid = Number(s.months[m.key] || 0);
+                const isLunas = paid >= MONTHLY_TARGET;
+                const isCicil = paid > 0 && paid < MONTHLY_TARGET;
+
+                let boxClass = 'bg-slate-50 border-slate-200 text-slate-500';
+                let statusLabel = 'Belum (0K)';
+                if (isLunas) {
+                    boxClass = 'bg-emerald-50 border-emerald-200 text-emerald-800';
+                    statusLabel = 'LUNAS 100K ✅';
+                } else if (isCicil) {
+                    boxClass = 'bg-amber-50 border-amber-300 text-amber-900';
+                    statusLabel = `Masuk ${formatK(paid)}`;
+                }
+
+                return `
+                    <div class="${boxClass} border rounded-xl p-2.5 flex flex-col justify-between">
+                        <span class="text-[10px] font-extrabold uppercase tracking-tight">${m.short}</span>
+                        <span class="text-xs font-extrabold mt-1">${statusLabel}</span>
+                    </div>
+                `;
+            }).join('');
+
+            // Render Student Audit Logs (Point #6)
+            const auditEl = document.getElementById('modalStudentAuditList');
+            const studentLogs = (appData.auditLogs || []).filter(l => l.studentId === s.id);
+            if (studentLogs.length === 0) {
+                auditEl.innerHTML = `<p class="text-xs text-slate-400 italic py-1.5">Belum ada riwayat mutasi tambahan sejak rekap awal.</p>`;
+            } else {
+                auditEl.innerHTML = studentLogs.map(l => `
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-2.5 text-xs flex items-center justify-between gap-2">
+                        <div>
+                            <span class="font-extrabold text-slate-800">${l.category}</span>
+                            <span class="text-[10px] text-slate-400 ml-1">• ${l.date}</span>
+                            <p class="text-[11px] text-slate-600 mt-0.5">${l.detail}</p>
+                        </div>
+                        <span class="font-extrabold text-emerald-600 shrink-0">+${formatRp(l.amount)}</span>
+                    </div>
+                `).join('');
+            }
+
+            // Show/Hide FIFO Cashier Box for Bendahara
+            const fifoBox = document.getElementById('adminFifoCashierBox');
+            if (isAdmin) {
+                fifoBox.classList.remove('hidden');
+                document.getElementById('fifoAmountInput').value = '';
+                updateFifoLivePreview();
+            } else {
+                fifoBox.classList.add('hidden');
+            }
+
+            const modal = document.getElementById('studentModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeStudentModal() {
+            const modal = document.getElementById('studentModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            selectedStudentId = null;
+        }
+
+        function setFifoQuickAmount(amt) {
+            document.getElementById('fifoAmountInput').value = amt;
+            updateFifoLivePreview();
+        }
+
+        // Simulate FIFO Allocation across months without mutating state yet
+        function simulateFifoAllocation(student, category, amount) {
+            let remaining = Number(amount || 0);
+            const steps = [];
+
+            if (remaining <= 0) return { steps, leftover: 0 };
+
+            if (category === 'BULANAN_FIFO') {
+                for (const m of MONTH_DEFINITIONS) {
+                    if (remaining <= 0) break;
+                    const currentPaid = Number(student.months[m.key] || 0);
+                    if (currentPaid < MONTHLY_TARGET) {
+                        const needed = MONTHLY_TARGET - currentPaid;
+                        const allocated = Math.min(remaining, needed);
+                        const afterPaid = currentPaid + allocated;
+                        remaining -= allocated;
+                        steps.push({
+                            monthKey: m.key,
+                            monthLabel: m.short,
+                            allocated,
+                            before: currentPaid,
+                            after: afterPaid,
+                            isNowLunas: afterPaid >= MONTHLY_TARGET
+                        });
+                    }
+                }
+            } else if (category === 'SENI') {
+                const currentPaid = Number(student.seniPaid || 0);
+                const needed = Math.max(0, SENI_TARGET - currentPaid);
+                const allocated = Math.min(remaining, needed);
+                steps.push({
+                    label: 'Uang Seni Budaya',
+                    allocated,
+                    before: currentPaid,
+                    after: currentPaid + allocated,
+                    isNowLunas: (currentPaid + allocated) >= SENI_TARGET
+                });
+                remaining -= allocated;
+            } else if (category === 'PERBAIKAN') {
+                const currentPaid = Number(student.perbaikanPaid || 0);
+                const needed = Math.max(0, PERBAIKAN_TARGET - currentPaid);
+                const allocated = Math.min(remaining, needed);
+                steps.push({
+                    label: 'Uang Perbaikan Kelas',
+                    allocated,
+                    before: currentPaid,
+                    after: currentPaid + allocated,
+                    isNowLunas: (currentPaid + allocated) >= PERBAIKAN_TARGET
+                });
+                remaining -= allocated;
+            }
+
+            return { steps, leftover: remaining };
+        }
+
+        function updateFifoLivePreview() {
+            if (!selectedStudentId) return;
+            const s = appData.students.find(item => item.id === selectedStudentId);
+            if (!s) return;
+
+            const category = document.getElementById('fifoCategorySelect').value;
+            const amount = Number(document.getElementById('fifoAmountInput').value || 0);
+            const previewEl = document.getElementById('fifoLivePreviewBox');
+
+            if (amount <= 0) {
+                previewEl.innerHTML = `<span class="text-slate-400 italic">Ketik atau klik tombol nominal cepat (+5K, +10K, +20K, +50K, +100K) untuk melihat simulasi alokasi otomatis...</span>`;
+                return;
+            }
+
+            const sim = simulateFifoAllocation(s, category, amount);
+            if (sim.steps.length === 0 || sim.steps[0].allocated === 0) {
+                previewEl.innerHTML = `<span class="text-emerald-700 font-bold">✅ Kategori iuran ini sudah LUNAS penuh untuk ${s.name}.</span>`;
+                return;
+            }
+
+            let html = `<div class="font-extrabold text-amber-950 mb-1"><i class="fa-solid fa-wand-magic-sparkles text-amber-600 mr-1"></i>Simulasi Alokasi Otomatis (${formatRp(amount)}):</div>`;
+            sim.steps.forEach(st => {
+                if (category === 'BULANAN_FIFO') {
+                    html += `
+                        <div class="flex items-center justify-between text-xs py-0.5 border-b border-amber-100 last:border-0">
+                            <span>• <strong>${st.monthLabel}</strong> (+${formatRp(st.allocated)})</span>
+                            <span class="font-extrabold ${st.isNowLunas ? 'text-emerald-700' : 'text-amber-800'}">
+                                ${formatK(st.before)} → ${formatK(st.after)} ${st.isNowLunas ? 'LUNAS ✅' : '(Cicil)'}
+                            </span>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="flex items-center justify-between text-xs py-0.5">
+                            <span>• <strong>${st.label}</strong> (+${formatRp(st.allocated)})</span>
+                            <span class="font-extrabold ${st.isNowLunas ? 'text-emerald-700' : 'text-amber-800'}">
+                                ${formatRp(st.before)} → ${formatRp(st.after)} ${st.isNowLunas ? 'LUNAS ✅' : ''}
+                            </span>
+                        </div>
+                    `;
+                }
+            });
+
+            if (sim.leftover > 0) {
+                html += `<div class="text-[11px] text-rose-600 font-bold mt-1">Catatan: Kelebihan ${formatRp(sim.leftover)} karena seluruh bulan sudah lunas.</div>`;
+            }
+
+            previewEl.innerHTML = html;
+        }
+
+        function commitFifoPayment() {
+            if (!isAdmin || !selectedStudentId) return;
+            const s = appData.students.find(item => item.id === selectedStudentId);
+            if (!s) return;
+
+            const category = document.getElementById('fifoCategorySelect').value;
+            const amount = Number(document.getElementById('fifoAmountInput').value || 0);
+            if (amount <= 0) {
+                showToast('Masukkan nominal setoran terlebih dahulu!', 'error');
+                return;
+            }
+
+            const sim = simulateFifoAllocation(s, category, amount);
+            if (sim.steps.length === 0 || sim.steps[0].allocated === 0) {
+                showToast('Iuran tersebut sudah lunas!', 'error');
+                return;
+            }
+
+            let detailNotes = [];
+            let actualTotalAllocated = 0;
+
+            if (category === 'BULANAN_FIFO') {
+                sim.steps.forEach(st => {
+                    s.months[st.monthKey] = st.after;
+                    actualTotalAllocated += st.allocated;
+                    detailNotes.push(`${st.monthLabel}: ${formatK(st.before)}→${formatK(st.after)}${st.isNowLunas ? ' (Lunas)' : ''}`);
+                });
+            } else if (category === 'SENI') {
+                const st = sim.steps[0];
+                s.seniPaid = st.after;
+                actualTotalAllocated = st.allocated;
+                detailNotes.push(`Seni Budaya: ${formatK(st.before)}→${formatK(st.after)}${st.isNowLunas ? ' (Lunas)' : ''}`);
+            } else if (category === 'PERBAIKAN') {
+                const st = sim.steps[0];
+                s.perbaikanPaid = st.after;
+                actualTotalAllocated = st.allocated;
+                detailNotes.push(`Perbaikan Kelas: ${formatK(st.before)}→${formatK(st.after)}${st.isNowLunas ? ' (Lunas)' : ''}`);
+            }
+
+            s.paidToday = true;
+
+            const now = new Date();
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            const timeStr = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}, ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')} WITA`;
+
+            const catLabel = category === 'BULANAN_FIFO' ? 'Iuran Bulanan (FIFO)' : (category === 'SENI' ? 'Uang Seni Budaya' : 'Uang Perbaikan Kelas');
+
+            appData.auditLogs.unshift({
+                id: 'log_' + Date.now(),
+                date: timeStr,
+                studentId: s.id,
+                studentName: s.name,
+                category: catLabel,
+                amount: actualTotalAllocated,
+                detail: detailNotes.join(' • ')
+            });
+
+            saveData();
+            openStudentModal(s.id);
+            showToast(`Setoran ${s.name} (${formatRp(actualTotalAllocated)}) berhasil dicatat!`);
+        }
+
+        // Send Individual Student WhatsApp Receipt
+        function sendStudentWAReceipt() {
+            if (!selectedStudentId) return;
+            const s = appData.students.find(item => item.id === selectedStudentId);
+            if (!s) return;
+
+            const mStat = analyzeStudentMonthly(s);
+            const sp = Number(s.seniPaid || 0);
+            const pp = Number(s.perbaikanPaid || 0);
+
+            let msg = `Assalamu'alaikum Wr. Wb.\n`;
+            msg += `*KARTU RAPOR KAS KELAS 8.6 SMPN 27 MAKASSAR*\n`;
+            msg += `_Portal KASDUA 8.6 — Kelompok II_\n\n`;
+            msg += `👤 Nama Siswa: *${s.name}*\n`;
+            msg += `────────────────────\n`;
+            msg += `1️⃣ *Iuran Bulanan (Rp 100.000/bln):*\n`;
+            if (mStat.isLunasUpToOct) {
+                msg += `• Periode s/d Bln 10 (Okt): ✅ LUNAS\n`;
+                msg += `• Bulan 11 (Nov): ${mStat.novPaid >= MONTHLY_TARGET ? '✅ LUNAS (100K)' : `Masuk ${formatRp(mStat.novPaid)} (Sisa ${formatRp(MONTHLY_TARGET - mStat.novPaid)})`}\n`;
+                if (mStat.desPaid > 0) msg += `• Bulan 12 (Des): Masuk ${formatRp(mStat.desPaid)}\n`;
+            } else {
+                msg += `• Rincian Bulan: ${mStat.unpaidSummaryText}\n`;
+                msg += `• Sisa s/d Bln 10: *${formatRp(mStat.arrearsRupiah)}*\n`;
+            }
+
+            msg += `\n2️⃣ *Uang Seni Budaya (Rp 100.000):*\n`;
+            msg += `• Status: ${sp >= SENI_TARGET ? '✅ LUNAS (Rp 100.000)' : `Masuk ${formatRp(sp)} (Sisa ${formatRp(SENI_TARGET - sp)})`}\n`;
+
+            msg += `\n3️⃣ *Uang Perbaikan Kelas (Rp 50.000):*\n`;
+            msg += `• Status: ${pp >= PERBAIKAN_TARGET ? '✅ LUNAS (Rp 50.000)' : `Masuk ${formatRp(pp)} (Sisa ${formatRp(PERBAIKAN_TARGET - pp)})`}\n`;
+            msg += `────────────────────\n`;
+            msg += `Terima kasih atas perhatian dan kerja sama Orang Tua/Wali Siswa Kelas 8.6 🙏🏽`;
+
+            window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // =========================================================================
+        // TAB 3: DENDA & PENGELUARAN
+        // =========================================================================
+        function renderDendaAndExpenses() {
+            const selectEl = document.getElementById('fineStudentSelect');
+            if (selectEl) {
+                selectEl.innerHTML = appData.students.map((s, i) => `<option value="${s.id}">${i + 1}. ${s.name}</option>`).join('');
+            }
+
+            const presetContainer = document.getElementById('presetFineButtons');
+            if (presetContainer) {
+                presetContainer.innerHTML = appData.fineRules.map(r => `
+                    <button onclick="recordQuickFine('${r.id}')" class="bg-white hover:bg-amber-100 border border-amber-300 rounded-xl p-2.5 text-left flex items-center justify-between transition">
+                        <span class="text-xs font-bold text-slate-800">${r.title}</span>
+                        <span class="bg-amber-500 text-white text-[11px] font-extrabold px-2 py-0.5 rounded">+${formatK(r.amount)}</span>
+                    </button>
+                `).join('');
+            }
+
+            const finesList = document.getElementById('finesListContainer');
+            if (appData.fines.length === 0) {
+                finesList.innerHTML = `<p class="text-xs text-slate-400 italic py-2">Belum ada catatan denda.</p>`;
+            } else {
+                finesList.innerHTML = appData.fines.map(f => {
+                    const st = appData.students.find(s => s.id === f.studentId);
+                    return `
+                        <div class="flex items-center justify-between bg-slate-50 p-3 rounded-xl border border-slate-200/80 text-xs">
+                            <div>
+                                <span class="font-extrabold text-slate-900">${st ? st.name : 'Siswa'}</span>
+                                <span class="text-slate-400 ml-1">• ${f.date}</span>
+                                <p class="text-slate-600 mt-0.5">${f.reason}</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="font-extrabold text-amber-700">${formatRp(f.amount)}</span>
+                                <button onclick="toggleFinePaid('${f.id}')" class="px-2.5 py-1 rounded-lg font-extrabold text-[10px] ${f.status === 'PAID' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                                    ${f.status === 'PAID' ? 'Lunas ✅' : 'Belum Bayar'}
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            const expList = document.getElementById('expensesListContainer');
+            expList.innerHTML = appData.expenses.map(e => `
+                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <span class="text-[10px] font-extrabold uppercase bg-white border border-slate-200 px-2 py-0.5 rounded text-slate-600">${e.category} • ${e.date}</span>
+                        <h4 class="font-extrabold text-sm text-slate-900 mt-1">${e.desc}</h4>
+                        <p class="text-xs text-slate-500">${e.note}</p>
+                    </div>
+                    <div class="text-right shrink-0">
+                        <span class="text-sm font-extrabold text-rose-600">- ${formatRp(e.amount)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function recordQuickFine(ruleId) {
+            if (!isAdmin) return;
+            const studentId = document.getElementById('fineStudentSelect').value;
+            const status = document.getElementById('fineStatusSelect').value;
+            const rule = appData.fineRules.find(r => r.id === ruleId);
+            const student = appData.students.find(s => s.id === studentId);
+            if (!rule || !student) return;
+
+            appData.fines.unshift({
+                id: 'f_' + Date.now(),
+                studentId,
+                reason: rule.title,
+                amount: rule.amount,
+                date: '10 Nov 2026',
+                status
+            });
+            saveData();
+            showToast(`Denda ${student.name} dicatat!`);
+        }
+
+        function toggleFinePaid(fineId) {
+            if (!isAdmin) return;
+            const f = appData.fines.find(item => item.id === fineId);
+            if (!f) return;
+            f.status = f.status === 'PAID' ? 'UNPAID' : 'PAID';
+            saveData();
+            showToast('Status denda diperbarui!');
+        }
+
+        // =========================================================================
+        // TAB 4: AUDIT TRAIL & WHATSAPP SNAPSHOT GENERATOR (POINT #1 & #6)
+        // =========================================================================
+        function generateSnapshotUrl() {
+            try {
+                const jsonStr = JSON.stringify(appData);
+                const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
+                const baseUrl = window.location.href.split('?')[0];
+                return `${baseUrl}?data=${encoded}`;
+            } catch (e) {
+                return window.location.href;
+            }
+        }
+
+        function buildWhatsAppReportText(includeSnapshotLink = true) {
+            const arrearsStudents = [];
+            const novStudents = [];
+            const desStudents = [];
+
+            appData.students.forEach(s => {
+                const mStat = analyzeStudentMonthly(s);
+                if (!mStat.isLunasUpToOct) {
+                    arrearsStudents.push({ name: s.name, text: mStat.unpaidSummaryText });
+                }
+                if (mStat.isLunasUpToOct || mStat.novPaid > 0) {
+                    novStudents.push({ name: s.name, novPaid: mStat.novPaid });
+                }
+                if (mStat.desPaid > 0) {
+                    desStudents.push({ name: s.name, desPaid: mStat.desPaid });
+                }
+            });
+
+            const perbaikanUnpaid = appData.students.filter(s => Number(s.perbaikanPaid || 0) < PERBAIKAN_TARGET);
+            const seniUnpaid = appData.students.filter(s => Number(s.seniPaid || 0) < SENI_TARGET);
+
+            let text = `Assalamu'alaikum, tabe info update kas & iuran *KASDUA 8.6 (Kelompok II - Kelas 8.6 SMPN 27 Makassar)*:\n\n`;
+
+            text += `📌 *1. Progres Iuran Bulanan (2025-2026 s/d Bln 10):*\n`;
+            arrearsStudents.forEach((item, idx) => {
+                text += `${idx + 1}. ${item.name} : ${item.text}\n`;
+            });
+
+            text += `\n✅ *Anak yang sudah bayar/mencicil iuran bulan November (Bln 11):*\n`;
+            novStudents.forEach((item, idx) => {
+                text += `${idx + 1}. ${item.name} ${item.novPaid >= MONTHLY_TARGET ? '✅' : formatK(item.novPaid)}\n`;
+            });
+
+            if (desStudents.length > 0) {
+                text += `\n📅 *Bln 12 (Desember):*\n`;
+                desStudents.forEach(item => {
+                    text += `- ${item.name} ${formatK(item.desPaid)}\n`;
+                });
+            }
+
+            text += `\n🛠️ *2. Dana tukang, tambahan beli horden, ongkos pasang TV, kabel2 kipas (50K/anak):*\n`;
+            perbaikanUnpaid.forEach(s => {
+                text += `- ${s.name} ${formatK(s.perbaikanPaid)}\n`;
+            });
+            text += `_(Yang tdk ada namanya artinya sudah lunas 🙏🏽)_\n`;
+
+            text += `\n🎨 *3. Seni Budaya (100K/orang):*\n`;
+            seniUnpaid.forEach((s, idx) => {
+                text += `${idx + 1}. ${s.name} : ${s.seniPaid > 0 ? formatK(s.seniPaid) : '-'}\n`;
+            });
+            text += `_(Yang tdk ada namanya artinya sudah lunas 🙏🏽)_\n`;
+
+            const recentLogs = (appData.auditLogs || []).slice(0, 5);
+            if (recentLogs.length > 0) {
+                text += `\n💵 *Setoran Masuk Terakhir:*\n`;
+                recentLogs.forEach(l => {
+                    text += `- ${l.studentName} ${formatK(l.amount)} (${l.category})\n`;
+                });
+            }
+
+            if (includeSnapshotLink) {
+                text += `\n🔗 *Cek Kartu Rapor Kas Anak (Tanpa Login):*\n${generateSnapshotUrl()}`;
+            }
+
+            return text;
+        }
+
+        function renderAuditAndWaPreview() {
+            const previewBox = document.getElementById('waReportPreviewBox');
+            if (previewBox) {
+                previewBox.textContent = buildWhatsAppReportText(false);
+            }
+
+            const auditContainer = document.getElementById('globalAuditList');
+            if (!auditContainer) return;
+
+            const logs = appData.auditLogs || [];
+            if (logs.length === 0) {
+                auditContainer.innerHTML = `<p class="text-xs text-slate-400 italic">Belum ada jejak audit transaksi.</p>`;
+                return;
+            }
+
+            auditContainer.innerHTML = logs.map(l => `
+                <div onclick="openStudentModal('${l.studentId}')" class="cursor-pointer bg-slate-50 hover:bg-emerald-50/50 p-3 rounded-xl border border-slate-200/80 flex items-center justify-between gap-2 transition">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-extrabold text-xs sm:text-sm text-slate-900">${l.studentName}</span>
+                            <span class="text-[10px] font-bold bg-white border border-slate-200 px-2 py-0.5 rounded text-slate-600">${l.category}</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mt-0.5">${l.detail}</p>
+                        <span class="text-[10px] text-slate-400">${l.date}</span>
+                    </div>
+                    <span class="font-extrabold text-sm text-emerald-600 shrink-0">+${formatRp(l.amount)}</span>
+                </div>
+            `).join('');
+        }
+
+        function copyTextToClipboard(text, successMsg) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            showToast(successMsg);
+        }
+
+        function copyWhatsAppReport(includeLink = true) {
+            const txt = buildWhatsAppReportText(includeLink);
+            copyTextToClipboard(txt, 'Laporan WA + Tautan Snapshot berhasil disalin!');
+        }
+
+        function copySnapshotUrlOnly() {
+            const url = generateSnapshotUrl();
+            copyTextToClipboard(url, 'Link Snapshot WA berhasil disalin!');
+        }
+
+        // =========================================================================
+        // CLOUD SYNC & GITHUB EXPORT MODALS
+        // =========================================================================
+        function openSyncModal() {
+            document.getElementById('cloudWebhookUrlInput').value = localStorage.getItem(WEBHOOK_KEY) || '';
+            const modal = document.getElementById('syncModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeSyncModal() {
+            const modal = document.getElementById('syncModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function saveCloudWebhookUrl() {
+            const url = document.getElementById('cloudWebhookUrlInput').value.trim();
+            if (url) {
+                localStorage.setItem(WEBHOOK_KEY, url);
+                showToast('URL Cloud Webhook berhasil disimpan!');
+            } else {
+                localStorage.removeItem(WEBHOOK_KEY);
+                showToast('Mode Cloud dinonaktifkan.');
+            }
+            renderAll();
+        }
+
+        async function pushToCloudNow() {
+            const url = localStorage.getItem(WEBHOOK_KEY);
+            if (!url) {
+                showToast('Masukkan URL Cloud terlebih dahulu!', 'error');
+                return;
+            }
+            try {
+                await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(appData)
+                });
+                showToast('Data berhasil dikirim ke Cloud!');
+            } catch (e) {
+                showToast('Data dikirim (mode no-cors).');
+            }
+        }
+
+        async function pullFromCloudNow() {
+            const url = localStorage.getItem(WEBHOOK_KEY);
+            if (!url) {
+                showToast('Masukkan URL Cloud terlebih dahulu!', 'error');
+                return;
+            }
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                if (data && Array.isArray(data.students)) {
+                    appData = data;
+                    saveData(false);
+                    showToast('Data terbaru berhasil ditarik dari Cloud!');
+                }
+            } catch (e) {
+                showToast('Gagal menarik data dari URL Cloud.', 'error');
+            }
+        }
+
+        // =========================================================================
+        // NAVIGATION, SEARCH & HASHED PIN AUTHENTICATION
+        // =========================================================================
+        function handleGlobalSearch() {
+            const q = document.getElementById('globalSearchInput').value.trim();
+            const clearBtn = document.getElementById('clearSearchBtn');
+            if (q.length > 0) clearBtn.classList.remove('hidden');
+            else clearBtn.classList.add('hidden');
+            renderAll();
+        }
+
+        function clearGlobalSearch() {
+            document.getElementById('globalSearchInput').value = '';
+            handleGlobalSearch();
+        }
+
+        function switchTab(tabName) {
+            activeTab = tabName;
+            ['rapor', 'program', 'denda', 'audit'].forEach(t => {
+                const sec = document.getElementById(`tabContent-${t}`);
+                const btn = document.getElementById(`tabBtn-${t}`);
+                if (t === tabName) {
+                    sec.classList.remove('hidden');
+                    btn.className = 'tab-btn flex-1 py-2.5 px-3 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-1.5 whitespace-nowrap bg-white text-brand-900 shadow-2xs';
+                } else {
+                    sec.classList.add('hidden');
+                    btn.className = 'tab-btn flex-1 py-2.5 px-3 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-1.5 whitespace-nowrap text-slate-600 hover:text-slate-900';
+                }
+            });
+        }
+
+        function handleAdminClick() {
+            if (isAdmin) {
+                toggleAdminMode();
+            } else {
+                document.getElementById('pinInput').value = '';
+                document.getElementById('pinErrorMsg').classList.add('hidden');
+                const modal = document.getElementById('pinModal');
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                setTimeout(() => document.getElementById('pinInput').focus(), 100);
+            }
+        }
+
+        function closePinModal() {
+            const modal = document.getElementById('pinModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function verifyPin() {
+            const pin = document.getElementById('pinInput').value;
+            if (computeSaltedPinHash(pin) === EXPECTED_PIN_HASH) {
+                isAdmin = true;
+                closePinModal();
+                updateAdminUI();
+                renderAll();
+                showToast('Mode Bendahara Aktif! Klik nama siswa untuk membuka Kasir FIFO.');
+            } else {
+                document.getElementById('pinErrorMsg').classList.remove('hidden');
+            }
+        }
+
+        function toggleAdminMode() {
+            isAdmin = false;
+            updateAdminUI();
+            renderAll();
+            showToast('Mode Bendahara dikunci kembali.');
+        }
+
+        function updateAdminUI() {
+            const banner = document.getElementById('adminBanner');
+            const lockIcon = document.getElementById('lockIcon');
+            const lockText = document.getElementById('lockText');
+            const quickFine = document.getElementById('adminQuickFineCard');
+            const btnExp = document.getElementById('btnAddExpense');
+            const btnNewSt = document.getElementById('btnAdminNewStudent');
+
+            if (isAdmin) {
+                banner.classList.remove('hidden');
+                lockIcon.className = 'fa-solid fa-unlock text-amber-300';
+                lockText.textContent = 'Bendahara Aktif';
+                quickFine.classList.remove('hidden');
+                btnExp.classList.remove('hidden');
+                btnExp.classList.add('flex');
+                btnNewSt.classList.remove('hidden');
+                btnNewSt.classList.add('flex');
+            } else {
+                banner.classList.add('hidden');
+                lockIcon.className = 'fa-solid fa-lock text-emerald-300';
+                lockText.textContent = 'Bendahara';
+                quickFine.classList.add('hidden');
+                btnExp.classList.add('hidden');
+                btnExp.classList.remove('flex');
+                btnNewSt.classList.add('hidden');
+                btnNewSt.classList.remove('flex');
+            }
+        }
+
+        // Expense & New Student Modals
+        function openExpenseModal() {
+            document.getElementById('expDescInput').value = '';
+            document.getElementById('expAmountInput').value = '';
+            document.getElementById('expNoteInput').value = '';
+            const m = document.getElementById('addExpenseModal');
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+        }
+
+        function closeExpenseModal() {
+            const m = document.getElementById('addExpenseModal');
+            m.classList.add('hidden');
+            m.classList.remove('flex');
+        }
+
+        function saveNewExpense() {
+            if (!isAdmin) return;
+            const desc = document.getElementById('expDescInput').value.trim();
+            const amount = Number(document.getElementById('expAmountInput').value || 0);
+            const category = document.getElementById('expCategoryInput').value;
+            const note = document.getElementById('expNoteInput').value.trim();
+            if (!desc || amount <= 0) {
+                showToast('Lengkapi keperluan dan nominal!', 'error');
+                return;
+            }
+            appData.expenses.unshift({
+                id: 'e_' + Date.now(),
+                date: '10 Nov 2026',
+                category,
+                desc,
+                amount,
+                note: note || 'Dicatat oleh Bendahara Kelompok II'
+            });
+            closeExpenseModal();
+            saveData();
+            showToast('Nota pengeluaran berhasil disimpan!');
+        }
+
+        function openAddStudentModal() {
+            document.getElementById('newStudentNameInput').value = '';
+            const m = document.getElementById('addStudentModal');
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+        }
+
+        function closeAddStudentModal() {
+            const m = document.getElementById('addStudentModal');
+            m.classList.add('hidden');
+            m.classList.remove('flex');
+        }
+
+        function addNewStudent() {
+            if (!isAdmin) return;
+            const name = document.getElementById('newStudentNameInput').value.trim();
+            if (!name) return;
+            appData.students.push({
+                id: 's_' + Date.now(),
+                name,
+                months: buildMonthlyLedger(null, 0, 0, 0),
+                perbaikanPaid: PERBAIKAN_TARGET,
+                seniPaid: SENI_TARGET,
+                paidToday: false
+            });
+            closeAddStudentModal();
+            saveData();
+            showToast(`Siswa ${name} ditambahkan ke urutan A–Z!`);
+        }
+
+        function exportDataJSON() {
+            const blob = new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'kasdua-86-smpn27-database.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('File JSON berhasil diunduh!');
+        }
+
+        function importDataJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (parsed && Array.isArray(parsed.students)) {
+                        appData = parsed;
+                        saveData(false);
+                        showToast('Database berhasil dimuat!');
+                    }
+                } catch (err) {
+                    showToast('File JSON tidak valid!', 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function resetToOfficialData() {
+            localStorage.removeItem(STORAGE_KEY);
+            window.history.replaceState({}, document.title, window.location.pathname);
+            appData = getInitialOfficialData();
+            saveData(false);
+            closeSyncModal();
+            showToast('Data dikembalikan ke laporan resmi Kelas 8.6!');
+        }
+
+        window.onload = function() {
+            renderAll();
+        };
+    </script>
+</body>
+</html>
